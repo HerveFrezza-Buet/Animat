@@ -157,11 +157,10 @@ rostopic pub -1 /command std_msgs/String -- drink
       
       <div id="core">
 	Now, we can control the robot by sending discrete commands to the vision and embodiement systems.
-	<pre>rostopic pub -1 /animat/vision/command std_msgs/String -- blue
-rostopic pub -1 /animat/embodiment/command std_msgs/String -- go</pre>
-rostopic pub -1 /animat/embodiment/command std_msgs/String -- stop</pre>
-rostopic pub -1 /animat/embodiment/command std_msgs/String -- left</pre>
-rostopic pub -1 /animat/embodiment/command std_msgs/String -- right</pre>
+	<pre>rostopic pub -1 /animat/embodiment/command std_msgs/String -- go
+rostopic pub -1 /animat/embodiment/command std_msgs/String -- stop
+rostopic pub -1 /animat/embodiment/command std_msgs/String -- left
+rostopic pub -1 /animat/embodiment/command std_msgs/String -- right
 rostopic pub -1 /animat/embodiment/command std_msgs/String -- ingest</pre>
       </div>
       

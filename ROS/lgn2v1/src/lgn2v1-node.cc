@@ -119,10 +119,7 @@ void on_focus(const geometry_msgs::Point::ConstPtr& msg,
 void on_lgn_focus(const geometry_msgs::Point::ConstPtr& msg,
 		  Focus& focus,Lgn& lgn) {
 
-  auto foc = lgn.whereIs(cv::Point2f(msg->x,msg->y));
-  ROS_INFO("(%f,%f) is at (%f,%f)",msg->x,msg->y,foc.x,foc.y);
-
-			 
+  auto foc = lgn.whereIs(cv::Point2f(msg->x,msg->y));			 
   focus.try_set(lgn.whereIs(cv::Point2f(msg->x,msg->y)));		  
 }
 
