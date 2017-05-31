@@ -1,0 +1,18 @@
+<launch>  
+  <node name="video"    pkg="usb_cam"    type="usb_cam_node" respawn="true">
+    <param name="video_device" value="/dev/video0" />
+    <param name="pixel_format" value="yuyv" />
+  </node>
+  <node name="gaze_view" pkg="image_view" type="image_view">
+    <remap from="image" to="lgn2v1/gaze"/>
+  </node>
+  <node name="lgn_view" pkg="image_view" type="image_view">
+    <remap from="image" to="lgn2v1/lgn"/>
+  </node>
+  <node name="reconf" pkg="rqt_reconfigure" type="rqt_reconfigure"/>
+  <group ns="lgn2v1">
+    <node name="converter" pkg="lgn2v1" type="lgn2v1-node">
+      <remap from="in" to="/video/image_raw" />
+    </node>
+  </group>
+</launch>

@@ -1,0 +1,12 @@
+<launch>
+  
+  <group ns="hardwired">
+    <node name="hardwired" pkg="animat" type="hardwired.py">
+	<remap from="hydration"   to="/animat/physiology/hydration" />
+	<remap from="glycemia"    to="/animat/physiology/glycemia"  />
+	<remap from="vision_cmd"  to="/animat/vision/command"       />
+	<remap from="fovea"       to="/animat/vision/fovea"         />
+    </node>
+  </group>
+  
+</launch>  

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-Equiv="Cache-Control" Content="no-cache" />
+    <meta http-Equiv="Pragma" Content="no-cache" />
+    <meta http-Equiv="Expires" Content="0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="./design/animat.css" type="text/css" rel="stylesheet"/>
+    <script src="./design/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="./design/prettify/src/run_prettify.js"></script>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <script type="text/javascript">
+      function resizeIFrame(iRef) {
+      iRef.height = iRef.contentWindow.document.body.scrollHeight + 50 + "px";
+      }
+    </script>
+    
+    <title>Animat</title>
+  </head>
+  
+  <body>
+
+    <div id="content">
+      
+      <div id="banner">
+      </div>
+      
+      
+      <div id="title">Animat</div>
+
+      <div id="section">Overview</div>
+
+      <div id="core">
+	This modules gather related computation for the situated agent.<br>
+      </div>
+
+
+      <div id="section">The vision interface</div>
+
+      <div id="subsection">Specification</div>
+      <div id="core">
+	The vision node handles reactive saccades.
+	<pre>roslaunch animat vision-demo.launch</pre>
+	The topics are the following ones:
+	<table>
+	  <tr> <td><b>Name</b>    </td> <td><b>Message</b>     </td> <td><b>Direction</b></td> <td><b>Meaning</b></td></tr>
+	  <tr> <td>in/compressed  </td> <td>sensor_msgs/Image  </td> <td>subscribe       </td> <td>input image (grayscaled)</td> </tr>
+	  <tr> <td>shift          </td> <td>geometry_msgs/Point</td> <td>subscribe       </td> <td>get the neural field position</td> </tr>
+	  <tr> <td>focus          </td> <td>geometry_msgs/Point</td> <td>subscribe       </td> <td>get the focus position</td> </tr>
+	  <tr> <td>lookat         </td> <td>geometry_msgs/Point</td> <td>advertise       </td> <td>set the focus position</td> </tr>
+	  <tr> <td>command        </td> <td>std_msgs/String    </td> <td>subscribe       </td> <td>get some command</td> </tr>
+	  <tr> <td>fovea          </td> <td>std_msgs/Float32   </td> <td>advertise       </td> <td>provides a detection ratio in the fovea in [0,1].</td> </tr>
+	  <tr> <td>events         </td> <td>std_msgs/String    </td> <td>advertise       </td> <td>notifies visual events</td> </tr>
+	  <tr> <td>hsv            </td> <td>color_filter/HSVParams </td> <td>advertise   </td> <td>tells which color has to be selected by the filter</td> </tr>
+	</table>
+      </div>
+      <div id="core">
+	The commands are:
+	<ul>
+	  <li>red : focus on a red patch.</li>
+	  <li>blue : focus on a blue patch.</li>
+	  <li>dontcare : focus according to dontcare filtering.</li>
+	  <li>reset : center the focus.</li>
+	</ul>
+      </div>
+      <div id="core">
+	The visual events are:
+	<ul>
+	  <li>focus_unstable : The focus gets out of stability.</li>
+	  <li>focus_X_Y : the focus enters in a focus area. X in {near,far} and Y in {left,center,right}</li>
+	  <li>fovea_on : something stable occurs in the fovea.</li>
+	  <li>fovea_off : the fovea gets out of stability.</li>
+	</ul>
+      </div>
+
+      <div id="subsection">Examples</div>
+      <div id="core">
+	In a first terminal, run
+	<pre>rostopic echo /animat/vision/fovea</pre>
+	In a second one, run
+	<pre>rostopic echo /animat/vision/events</pre>
+	Then, in a third terminal, try to send commands.
+	<pre>rostopic pub -1 /animat/vision/command std_msgs/String -- blue
+rostopic pub -1 /animat/vision/command std_msgs/String -- red
+rostopic pub -1 /animat/vision/command std_msgs/String -- dontcare
+rostopic pub -1 /animat/vision/command std_msgs/String -- reset
+	</pre>
+      </div>
+      
+      <div id="section">The physiology interface</div>
+
+      <div id="subsection">Specification</div>
+      <div id="core">
+	The physiology node handles the animat internal variables.
+	<pre>rosrun animat physiology.py</pre>
+	The topics are the following ones:
+	<table>
+	  <tr> <td><b>Name</b>    </td> <td><b>Message</b>     </td> <td><b>Direction</b></td> <td><b>Meaning</b></td></tr>
+	  <tr> <td>command        </td> <td>std_msgs/String    </td> <td>subscribe       </td> <td>get some command</td> </tr>
+	  <tr> <td>hydration      </td> <td>std_msgs/Float32   </td> <td>advertise       </td> <td>provides the hydration level</td> </tr>
+	  <tr> <td>glycemia       </td> <td>std_msgs/Float32   </td> <td>advertise       </td> <td>provides the glycemia level</td> </tr>
+	  <tr> <td>events         </td> <td>std_msgs/String    </td> <td>advertise       </td> <td>notifies physiological events</td> </tr>
+	</table>
+      </div>
+      <div id="core">
+	The commands are:
+	<ul>
+	  <li>eat : refills glycemia.</li>
+	  <li>drink : refills hydration.</li>
+	</ul>
+      </div>
+      <div id="core">
+	The physiological events are:
+	<ul>
+	  <li>hydration_alert : hydration passes below the shortage threshold.</li>
+	  <li>hydration_refill : hydratation is refilled while it was below the shortage threshold</li>
+	  <li>glycemia_alert and glycemia_refill : the same for glycemia</li>
+	</ul>
+      </div>
+
+      <div id="subsection">Examples</div>
+      <div id="core">
+	In a first terminal, run
+	<pre>rostopic echo /events</pre>
+	In a second one, run
+	<pre>rosrun rqt_plot rqt_plot /hydration /glycemia </pre>
+	Then, in a third terminal, try to send commands.
+	<pre>rostopic pub -1 /command std_msgs/String -- eat
+rostopic pub -1 /command std_msgs/String -- drink
+	</pre>
+      </div>
+      
+      <div id="section">The embodiement interface</div>
+      <div id="subsection">Specification</div>
+      <div id="core">
+	This deals with discrete commands for non-vision stuff. The
+	node interacts with a robot as well as a physiology.  The
+	topics are the following ones:
+	<table>
+	  <tr> <td><b>Name</b>    </td> <td><b>Message</b>     </td> <td><b>Direction</b></td> <td><b>Meaning</b></td></tr>
+	  <tr> <td>command        </td> <td>std_msgs/String    </td> <td>subscribe       </td> <td>get some command ("left", "right", "go", "stop", "ingest")</td> </tr>
+	  <tr> <td>area        </td> <td>std_msgs/String    </td> <td>subscribe       </td> <td>get in which area ("food", "water") the robot is. This should be refreshed with a high frequency.</td> </tr>
+	  <tr> <td>physio         </td> <td>std_msgs/String    </td> <td>advertise       </td> <td>notifies ingestion ("eat","drink").</td> </tr>
+	  <tr> <td>cmd_vel         </td> <td>std_msgs/String    </td> <td>advertise       </td> <td>This controls the robot.</td> </tr>
+	</table>
+      </div>
+      
+      <div id="subsection">Examples</div>
+      <div id="core">
+	First, launch roscore and then v-rep. Open the scene <a href="../V-REP/xor.ttt">xor.ttt</a>. Then, launch the whole stuff :
+	<pre>roslaunch animat interface-demo.launch</pre>
+	Then, run the follwing commands, each on in its own terminal so that the printed values are visible. These are the available events.
+	<pre>rostopic echo /animat/physiology/events</pre>
+	<pre>rostopic echo /animat/vision/events</pre>
+      </div>
+      
+      <div id="core">
+	Now, we can control the robot by sending discrete commands to the vision and embodiement systems.
+	<pre>rostopic pub -1 /animat/vision/command std_msgs/String -- blue
+rostopic pub -1 /animat/embodiment/command std_msgs/String -- go</pre>
+rostopic pub -1 /animat/embodiment/command std_msgs/String -- stop</pre>
+rostopic pub -1 /animat/embodiment/command std_msgs/String -- left</pre>
+rostopic pub -1 /animat/embodiment/command std_msgs/String -- right</pre>
+rostopic pub -1 /animat/embodiment/command std_msgs/String -- ingest</pre>
+      </div>
+      
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+    </div>
+  </body>
+</html>
+

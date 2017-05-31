@@ -1,0 +1,437 @@
+
+iframe {
+    margin: 0px; 
+    width:100%; 
+    border: none;
+} 
+
+#content {
+    width: 960px;
+    font-family: arial;
+    font-size: 18px;
+    margin: 0 auto;
+    line-height: 140%;
+    color: #666666;
+}
+
+#banner {
+    width: 970px;
+    height: 155px;
+    background-image: url(Banner.jpg);
+    background-repeat: no-repeat;
+}
+
+#section {
+    width: 960px;
+    margin-top: 24px;
+    margin-bottom: 12px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    font-size: 24px;
+    line-height: 140%;
+    font-weight: bold;
+    font-family: arial;
+    color: #000000;
+    background-color: #DDDDFF;
+}
+
+#subsection {
+    width: 960px;
+    border-top: 2px solid #5555FF;;
+    border-bottom: 2px solid #5555FF;;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    padding-left: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    font-family: arial;
+    color: #000000;
+}
+
+#subsubsection {
+    width: 960px;
+    border-top: 1px solid #5555FF;;
+    border-bottom: 1px solid #5555FF;;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    padding-left: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: arial;
+    color: #000000;
+}
+
+
+#important {
+    width: 960px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: bold;
+    line-height: 200%;
+    font-size: 22px;
+    font-weight: bold;
+    border-style:solid;
+    border-color: #FF0044;
+    border-radius: 15px;    
+}
+
+#question {
+    width: 960px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    line-height: 200%;
+    padding-left: 10px;
+    color: #000080;
+    background-color: #C7D2F2;
+    border-style:solid;
+    border-color: #5272CC;
+    border-radius: 15px;	
+}
+
+#reponse {
+    width: 960px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    margin-right: 12px;
+    margin-left: 12px;
+    padding-left: 10px;
+    line-height: 150%;
+    color: #3D3DFC;
+    background-color: #DDDDFF;
+}
+
+ul li {
+	margin-top: 6px;
+	margin-bottom: 6px;
+}
+
+#core {
+    width: 960px;
+    margin-top: 18px;
+    padding-left: 10px;
+    font-size: 18px;
+    font-family: arial;
+    text-align: justify;
+    color: #444444;
+}
+
+#core a {
+    text-decoration: none;
+    color: #C75F2C;
+}
+
+#core a:hover {
+    color: #FF5400;
+}
+
+#core table {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    margin-right: 6px;
+    margin-left: 6px;
+    width: auto;
+    border-collapse: collapse; /* Les bordures du tableau seront collées (plus joli) */
+}
+#core th {
+    border: 2px solid black;
+    text-align:left;
+    padding: 9px;
+}
+#core td {
+    border: 2px solid black;
+    text-align:left;
+    padding: 9px;
+}
+
+#core pre {
+    font-family: monospace;
+    color: #00BB00;
+    font-size: 15px;
+}
+
+#code {
+    font-weight: bold;
+    font-family: courier;
+    color: #008800;
+    font-size: 18px;
+}
+
+#split {
+}
+
+#split table {
+    width: 100%;
+    border: 0px;
+}
+
+#split table td {
+    border: 0px;
+    font-size: 18px;
+    font-family: arial;
+    text-align: justify;
+    color: #444444;
+}
+
+#verbintsplit {
+}
+
+#verbintsplit table {
+    width: 100%;
+    border: 0px;
+}
+
+#verbintsplit table td {
+    border: 0px;
+    font-size: 18px;
+    font-family: arial;
+    text-align: justify;
+    color: #444444;
+}
+
+#verbintsplit pre {
+    font-family: monospace;
+    color: #444444;
+    font-size: 15px;
+}
+
+#source {
+  width: 60%;
+  float: left;
+}
+
+#comment {
+  width: 40%;
+  float: right;
+}
+
+#comment b {
+	color: #FF0000;
+}
+
+#title {
+    text-align: center;
+    width: 970px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 0px;
+    margin-bottom: 24px;
+    font-size: 36px;
+    font-weight: bold;
+    font-family: arial;
+    line-height: 120%;
+    color: #FFFFFF;
+    background-color: #5555FF;
+}
+
+#excerpt {
+seamless: true;
+width: 960px;
+height: 100%;
+style: "border:medium rgb(100,100,100)"
+}
+
+pre.console {
+        background-color: #000000;
+        color: #FFFFEE;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+        -moz-border-radius: 8px;
+        -webkit-border-radius: 8px;
+        -o-border-radius: 8px;
+        -ms-border-radius: 8px;
+        -khtml-border-radius: 8px;
+        border-radius: 8px;
+}
+
+pre b, code b { color: #FF0000; }
+
+pre .str { color: #65B042; } /* string  - green */
+pre .kwd { color: #E28964; } /* keyword - dark pink */
+pre .com { color: #AAAA33; font-style: italic; } /* comment - jaune */
+pre .typ { color: #89bdff; } /* type - light blue */
+pre .lit { color: #3387CC; } /* literal - blue */
+pre .pun { color: #444444; } /* punctuation - dark */
+pre .pln { color: #444444; } /* plaintext - dark */
+pre .tag, code .tag { color: #89bdff; } /* html/xml tag    - light blue */
+pre .atn, code .atn { color: #bdb76b; } /* html/xml attribute name  - khaki */
+pre .atv, code .atv { color: #65B042; } /* html/xml attribute value - green */
+pre .dec, code .dec { color: #3387CC; } /* decimal - blue */
+
+code .str { color: #008000; } /* string  - green */
+code .kwd { color: #A04040; } /* keyword - dark pink */
+code .com { color: #7E7E7E; font-style: italic; } /* comment - gray */
+code .typ { color: #0000A0; } /* type - blue */
+code .lit { color: #000060; } /* literal - blue */
+code .pun { color: #000; } /* punctuation - black */
+code .pln { color: #000; } /* punctuation - black */
+
+pre.prettyprint {
+        background-color: #FFFEDD;
+        -moz-border-radius: 8px;
+        -webkit-border-radius: 8px;
+        -o-border-radius: 8px;
+        -ms-border-radius: 8px;
+        -khtml-border-radius: 8px;
+        border-radius: 8px;
+}
+
+code.prettyprint {
+        -moz-border-radius: 8px;
+        -webkit-border-radius: 8px;
+        -o-border-radius: 8px;
+        -ms-border-radius: 8px;
+        -khtml-border-radius: 8px;
+        border-radius: 8px;
+}
+
+pre.prettyprint {
+        width: 95%;
+        margin: 1em auto;
+        padding: 1em;
+        white-space: pre-wrap;
+-webkit-tab-size: 4;
+-moz-tab-size: 4;
+-ms-tab-size: 4;
+-o-tab-size: 4;
+tab-size: 4;
+}
+
+
+/* Specify class=linenums on a pre to get line numbering */
+ol.linenums { margin-top: 0; margin-bottom: 0; color: #AEAEAE; } /* IE indents via margin-left */
+li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8 { list-style-type: none }
+/* Alternate shading for lines */
+li.L1,li.L3,li.L5,li.L7,li.L9 { }
+
+@media print {
+  pre .str, code .str { color: #060; }
+  pre .kwd, code .kwd { color: #006; font-weight: bold; }
+  pre .com, code .com { color: #600; font-style: italic; }
+  pre .typ, code .typ { color: #404; font-weight: bold; }
+  pre .lit, code .lit { color: #044; }
+  pre .pun, code .pun { color: #440; }
+  pre .pln, code .pln { color: #000; }
+  pre .tag, code .tag { color: #006; font-weight: bold; }
+  pre .atn, code .atn { color: #404; }
+  pre .atv, code .atv { color: #060; }
+}
+
+
+
+
+/*
+
+Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmail.com>
+
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #fdf6e3;
+  color: #657b83;
+  -webkit-text-size-adjust: none;
+}
+
+.hljs-comment,
+.diff .hljs-header,
+.hljs-doctype,
+.hljs-pi,
+.lisp .hljs-string {
+  color: #93a1a1;
+}
+
+/* Solarized Green */
+.hljs-keyword,
+.hljs-winutils,
+.method,
+.hljs-addition,
+.css .hljs-tag,
+.hljs-request,
+.hljs-status,
+.nginx .hljs-title {
+  color: #859900;
+}
+
+/* Solarized Cyan */
+.hljs-number,
+.hljs-command,
+.hljs-string,
+.hljs-tag .hljs-value,
+.hljs-rule .hljs-value,
+.hljs-doctag,
+.tex .hljs-formula,
+.hljs-regexp,
+.hljs-hexcolor,
+.hljs-link_url {
+  color: #2aa198;
+}
+
+/* Solarized Blue */
+.hljs-title,
+.hljs-localvars,
+.hljs-chunk,
+.hljs-decorator,
+.hljs-built_in,
+.hljs-identifier,
+.vhdl .hljs-literal,
+.hljs-id,
+.css .hljs-function,
+.hljs-name {
+  color: #268bd2;
+}
+
+/* Solarized Yellow */
+.hljs-attribute,
+.hljs-variable,
+.lisp .hljs-body,
+.smalltalk .hljs-number,
+.hljs-constant,
+.hljs-class .hljs-title,
+.hljs-parent,
+.hljs-type,
+.hljs-link_reference {
+  color: #b58900;
+}
+
+/* Solarized Orange */
+.hljs-preprocessor,
+.hljs-preprocessor .hljs-keyword,
+.hljs-pragma,
+.hljs-shebang,
+.hljs-symbol,
+.hljs-symbol .hljs-string,
+.diff .hljs-change,
+.hljs-special,
+.hljs-attr_selector,
+.hljs-subst,
+.hljs-cdata,
+.css .hljs-pseudo,
+.hljs-header {
+  color: #cb4b16;
+}
+
+/* Solarized Red */
+.hljs-deletion,
+.hljs-important {
+  color: #dc322f;
+}
+
+/* Solarized Violet */
+.hljs-link_label {
+  color: #6c71c4;
+}
+
+.tex .hljs-formula {
+  background: #eee8d5;
+}

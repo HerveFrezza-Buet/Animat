@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-Equiv="Cache-Control" Content="no-cache" />
+    <meta http-Equiv="Pragma" Content="no-cache" />
+    <meta http-Equiv="Expires" Content="0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="./design/animat.css" type="text/css" rel="stylesheet"/>
+    <script src="./design/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="./design/prettify/src/run_prettify.js"></script>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <script type="text/javascript">
+      function resizeIFrame(iRef) {
+      iRef.height = iRef.contentWindow.document.body.scrollHeight + 50 + "px";
+      }
+    </script>
+    
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+    <title>Focus</title>
+  </head>
+  
+  <body>
+
+    <div id="content">
+      
+      <div id="banner">
+      </div>
+      
+      
+      <div id="title">Focus</div>
+
+      <div id="core">
+	This modules determines where to focus attention from a grayscale image produced, for example by the <a href="color_filter.html">color_filter</a> module. The focus-node performs a competition to determine the region where the input grayscale image is locally maximal.
+
+
+      </div>
+
+
+      <div id="section">Overview</div>
+
+
+    <div id="core">
+      The competition is done with a neural field defined in the paper "Dynamic formation of self-organizing maps" (<a href="focus/wsom2014.pdf">PDF</a>). The equations governing the dynamic of the neural field are given below. The position $x$ is a 2D discrete position $x \in [0, N-1]^2$.
+
+	<center><img src="focus/eqWSOM.png" width=75%></center>
+
+	where :
+	<ul>
+	  <li>the weights $w(x,y)$ is a difference of gaussians $w(x,y)=A_+ \exp({-\frac{d(x,y)^2}{2 \sigma_+^2}}) - A_- \exp(-{\frac{d(x,y)^2}{2 \sigma_-^2}})$ is a difference of gaussians with parameters ($A_+,\sigma_+,A_-,\sigma_-$) ,</li>
+	  <li>$g(x,y)=\exp(-\frac{d(x,y)^2}{2 \sigma_g^2})$ is a gaussian of parameter $\sigma_g$</li>
+	  <li>$d(x,y)$ is a distance between locations $x$ and $y$ in the field. It can be the euclidean distance $d(x,y) = \sqrt{\sum_i (x_i-y_i)^2}$ or a circular symmetric distance. For a neural field of side $N$, the circular symmetric distance is defined as $d(x,y) = \sqrt{\sum_i \min(|x_i-y_i|,N-|x_i -y_i|)^2}$</li>
+	</ul>
+
+
+      </div>
+      
+
+    <div id="section">ROS integration</div>
+    
+    <div id="core">
+      The focus module provides a single node which can be tested with the focus-demo.launch launch file which works with a USB camera and the <a href="color_filter.html">color_filter</a> module for providing a grayscale input to the neural field.<br/>
+
+      <center><pre id="code">roslaunch focus focus-demo.launch</pre></center><br/>
+
+      You can also test the full loop with the lgn2v1, color_filter and focus nodes by calling: <br/>
+
+      <center><pre id="code">roslaunch focus focus-lgn-demo.launch</pre></center><br/>
+      
+      This distorts the input, filter the distorted image, performs the competition and loops back where to shift the attention to the lgn2v1 node.<br/>
+
+      
+      The communication with the node is realized by topics and a dynamic reconfiguration of parameters. The topic are the following ones:
+	<table>
+	  <tr> <td><b>Name</b></td> <td><b>Message</b></td> <td><b>Direction</b></td> <td><b>Meaning</b></td></tr>
+	  <tr> <td>in    </td> <td>sensor_msgs/Image  </td> <td>subscribe</td> <td>input grayscale image</td> </tr>
+	  <tr> <td>out  </td> <td>sensor_msgs/Image  </td> <td>publish  </td> <td>neural field output activities $f(v(x,t))$</td> </tr>
+	  <tr> <td>shift </td> <td>geometry_msgs/Point</td> <td>publish  </td> <td>where the input is locally maximal $(lw,lh,0)$ with $lw, lh \in [-0.5, 0.5]^2$ as defined on <a href="lgn2v1.html">lgn2v1</a></td> </tr>
+	</table>
+      </div>
+
+      
+
+    </div>
+  </body>
+</html>
+

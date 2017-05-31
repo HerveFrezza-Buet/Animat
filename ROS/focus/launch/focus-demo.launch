@@ -1,0 +1,34 @@
+<launch>  
+
+  <node name="video"    pkg="usb_cam"    type="usb_cam_node" respawn="true">
+    <param name="video_device" value="/dev/video0" />
+    <param name="pixel_format" value="yuyv" />
+  </node>
+
+  <node name="raw_view" pkg="image_view" type="image_view">
+    <remap from="image" to="/video/image_raw"/>
+  </node>
+
+
+  <group ns="color_filter">
+    <node name="filter" pkg="color_filter" type="color-filter-hsv-node">
+      <remap from="in" to="/video/image_raw" />
+    </node>
+  </group>
+  <node name="filtered_view" pkg="image_view" type="image_view">
+    <remap from="image" to="color_filter/filtered"/>
+  </node>
+
+
+  <group ns="focus">
+    <node name="focus" pkg="focus" type="focus-node">
+      <remap from="in" to="/color_filter/filtered"/>
+    </node>
+  </group>
+
+
+  <node name="focus_view" pkg="image_view" type="image_view">
+    <remap from="image" to="/focus/out"/>
+  </node>
+
+</launch>

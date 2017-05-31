@@ -1,0 +1,16 @@
+params
+
+sat/dsat = (0.9,.3)
+r,q,d,lgn_side,blur
+
+
+topics
+
+/lookat (sub) : set (w,h)
+/focus (pub) : get (w,h)
+/shift (sub) : set (w,h) from (lw,lh)
+
+/in (sub)
+/lgn (pub)
+/gaze (pub, image avec la croix)
+

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-Equiv="Cache-Control" Content="no-cache" />
+    <meta http-Equiv="Pragma" Content="no-cache" />
+    <meta http-Equiv="Expires" Content="0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="./design/animat.css" type="text/css" rel="stylesheet"/>
+    <script src="./design/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="./design/prettify/src/run_prettify.js"></script>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <script type="text/javascript">
+      function resizeIFrame(iRef) {
+      iRef.height = iRef.contentWindow.document.body.scrollHeight + 50 + "px";
+      }
+    </script>
+    
+    <title>Lgn2V1</title>
+  </head>
+  
+  <body>
+
+    <div id="content">
+      
+      <div id="banner">
+      </div>
+      
+      
+      <div id="title">Lgn2V1</div>
+
+      <div id="section">Overview</div>
+
+      <div id="core">
+	This modules compute a human retinal inspired (roughly...) image
+	magnification. The input image is analyzed according to a
+	focus point (w,h). The area around that point, i.e. inside the
+	red circle, is magnified, while the area outside the circle is
+	reduced.<br>
+	<br>
+	<img src="lgn2v1/input.jpg"/><br>
+	<br>
+	The distorted image is processed such that colors with a
+	significant hues are kept and enhanced. This leads to the following result.
+	<br>
+	<img src="lgn2v1/lgn.jpg"/><br>
+	<br>
+      </div>
+
+      <div id="section">Computation</div>
+
+      <div id="subsection">Distortion</div>
+
+      The distortion consists in associating to each point <span lang="latex">M</span> in the input image a position <span lang="latex">N</span> in the lgn image. <br>
+      <br>
+      <img src="lgn2v1/distortion.jpg"/><br>
+      <br>
+      If <span lang="latex">F</span> denotes the focus point, the transormation is
+      <div lang="latex">\frac{M-F}r = \left(\frac Nq \right)^d</div>.
+
+      <div id="subsection">Blur and colors</div>
+
+      <div id="core">
+	Before being distorted, the image is blurred with a Gaussian filter. The parameter <span lang="latex">\sigma</span> of the Gaussian (expressed in the position units of source image, i.e width=1) is denoted <b>blur</b>.
+      </div>
+      
+
+      <div id="section">ROS integration</div>
+
+      <div id="subsection">The node interface</div>
+      <div id="core">
+	The lgn2v1 module provides a single node.
+	<pre id="code">roslaunch lgn2v1 lgn2v1-demo.launch</pre>
+	The communication with the node is realized by topics and a dynamic reconfiguration of parameters. The topic are the following ones:
+	<table>
+	  <tr> <td><b>Name</b></td> <td><b>Message</b></td> <td><b>Direction</b></td> <td><b>Meaning</b></td></tr>
+	  <tr> <td>in    </td> <td>sensor_msgs/Image  </td> <td>subscribe</td> <td>input image</td> </tr>
+	  <tr> <td>gaze  </td> <td>sensor_msgs/Image  </td> <td>publish  </td> <td>input image with focus</td> </tr>
+	  <tr> <td>lgn   </td> <td>sensor_msgs/Image  </td> <td>publish  </td> <td>lgn image</td> </tr>
+	  <tr> <td>lookat</td> <td>geometry_msgs/Point</td> <td>subscribe</td> <td>set focus to <span lang="latex">(w,h,0)</span></td> </tr>
+	  <tr> <td>focus </td> <td>geometry_msgs/Point</td> <td>publish  </td> <td>get the current focus position<span lang="latex">(w,h,0)</span></td> </tr>
+	  <tr> <td>shift </td> <td>geometry_msgs/Point</td> <td>subscribe  </td> <td>set focus such as the point <span lang="latex">(lw,lh,0)</span> in lgn projects now at lgn center</td> </tr>
+	</table><br>
+	<b>Nota :</b> When publishing on the <span id="code">look_at</span> topic, the node becomes insensitive to publications on the <span id="code">shift</span> topic, for several miliseconds (see the <span id="code">focus_freeze</span> parameter).
+      </div>
+
+      <div id="subsection">Examples</div>
+      <div id="core">
+	<pre>
+rostopic echo -n 1 /lgn2v1/focus
+rostopic pub  -1   /lgn2v1/lookat geometry_msgs/Point --  0.25 0.25 0
+rostopic echo -n 1 /lgn2v1/focus
+rostopic pub  -1   /lgn2v1/shift  geometry_msgs/Point -- -0.25 -0.10 0
+rostopic pub  -1   /lgn2v1/shift  geometry_msgs/Point -- -0.25 -0.10 0
+rostopic pub  -1   /lgn2v1/shift  geometry_msgs/Point -- -0.25 -0.10 0
+rostopic echo -n 1 /lgn2v1/focus
+rostopic pub  -1   /lgn2v1/lookat geometry_msgs/Point --  0 0 0
+	</pre>
+      </div>
+
+      
+
+    </div>
+  </body>
+</html>
+

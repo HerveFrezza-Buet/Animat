@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-Equiv="Cache-Control" Content="no-cache" />
+    <meta http-Equiv="Pragma" Content="no-cache" />
+    <meta http-Equiv="Expires" Content="0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="./design/animat.css" type="text/css" rel="stylesheet"/>
+    <script src="./design/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="./design/prettify/src/run_prettify.js"></script>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <script type="text/javascript">
+      function resizeIFrame(iRef) {
+      iRef.height = iRef.contentWindow.document.body.scrollHeight + 50 + "px";
+      }
+    </script>
+    
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript"
+	    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+
+    <title>color_filter</title>
+  </head>
+  
+  <body>
+
+    <div id="content">
+      
+      <div id="banner">
+      </div>
+      
+      
+      <div id="title">color_filter</div>
+
+
+      <div id="section">Overview</div>
+
+      <div id="core">
+	This modules provides a node color-filter-hsv-node which takes a colored image and produces a gray scale image. The filter works in the HSV color space. It filters out pixels that have a too low value or saturation. Then it operates in one of two modes, performing a filter on the Hue or setting all the remaining pixels to 255.<br/><br/>
+
+
+	
+	Given a color input image $in$, the node computes the filtered grayscale image $filter$ as following. The parameters of the filter are $h_0$, $\sigma_h$, $v_{min}$, $s_{min}$ and the mode selected with the boolean dontcare. Consider the $i$-th pixel and denote $h_i, s_i, v_i$ the HSV component of the pixel. Then:
+	<ul>
+	  <li>If $s_i \leq s_{min}$ or $v_i \leq v_{min}$, then $filter_i = 0$</li>
+	  <li>otherwise :</li>
+	  <ul>
+	    <li>if dontcare=1, then $filter_i = 255$</li>
+	    <li>otherwise : $filter_i = f(h_i, h_0, \sigma_h)$</li>
+	  </ul>
+	</ul>
+	The $f(h, h_0, \sigma_h)$ function is simply a hat of width $2\sigma_h$ centered on $h_0$:
+	<ul>
+	  <li>if $d = \min(|h - h_0|, H - |h - h_0|) \leq \sigma_h$, then $f(h) = \frac{\sigma_h - d}{\sigma_h}$</li>
+	  <li>otherwise, $f(h) = 0$
+	</ul>
+
+	For example, within OpenCV, with $h_i \in [0, 180]$, $s_i \in [0,255]$, $v_i \in [0, 255]$,  setting $h_0 = 120$, $\sigma_h = 10$, $s_{min}=50$,  $v_{min} = 100$, we get :<br/>
+
+	<img src="color_filter/src.jpg" width=45%><img src="color_filter/filtered.jpg" width=45%><br/>
+
+	and if we select the dontcare mode, we get :<br/>
+
+	<img src="color_filter/src.jpg" width=45%><img src="color_filter/filtered_dontcare.jpg" width=45%><br/>
+
+	Below is a colored representation with a hue from 0 to 180.<br/>
+	<center><img src="color_filter/mire.png"></center>
+
+      </div>
+
+      <div id="section">ROS integration</div>
+
+      <div id="subsection">The node interface</div>
+      <div id="core">
+
+	The color_filter package provides a single node : color-filter-hsv-node. It can be tested with the launch file :
+
+	<pre id="code">roslaunch color_filter color-filter-demo.launch</pre>
+
+	In addition to the filter node, the package provides the message HSVParams which has the following fields:
+	<table>
+	  <tr><th>Field name</th><th>Type</th><th>Meaning</th></tr>
+	  <tr><td>hue</td><td>int</td><td>Center of the hue filter $h_0$</td></tr>
+	  <tr><td>hue_tol</td><td>int</td><td>Width of the hue filter $\sigma_h$</td></tr>
+	  <tr><td>min_value</td><td>int</td><td>Minimal value for the value of the HSV of a pixel to be considered $v_{min}$</td></tr>
+	  <tr><td>min_saturation</td><td>int</td><td>Minimal value for the saturation of the HSV of a pixel to be considered $s_{min}$</td></tr>
+	  <tr><td>dontcare</td><td>bool</td><td>If true, all the pixels with at least min_value and min_saturation are set to 255; If false, the image is filtered with respect to the hue</td></tr>
+	</table>
+
+
+	The communication with the node is realized by topics. The topic are the following ones:
+	<table>
+	  <tr> <td><b>Name</b></td> <td><b>Message</b></td> <td><b>Direction</b></td> <td><b>Meaning</b></td></tr>
+	  <tr> <td>in    </td> <td>sensor_msgs/Image  </td> <td>subscribe</td> <td>input color image</td> </tr>
+	  <tr> <td>params</td> <td>color_filter/HSVParams</td><td>subscribe</td><td>Parameters of the HSV filter</td></tr>
+	  <tr> <td>filtered  </td> <td>sensor_msgs/Image  </td> <td>publish  </td> <td>filtered image</td> </tr>
+	</table>
+
+
+      </div>
+      
+      <div id="subsection">examples</div>
+      <div id="core">
+	Switching to red whiteboard marker color:
+	<pre>rostopic pub -1 /color_filter/params color_filter/HSVParams --   5 10 25 110 false</pre>
+	Switching to blue whiteboard marker color:
+	<pre>rostopic pub -1 /color_filter/params color_filter/HSVParams -- 116 10 25 110 false</pre>
+      </div>
+
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+    </div>
+  </body>
+</html>
+
