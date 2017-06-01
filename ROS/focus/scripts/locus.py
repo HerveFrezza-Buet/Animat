@@ -6,7 +6,7 @@ import roslib
 import rospy
 import numpy as np
 import dynamic_reconfigure.server
-from focus.cfg import LocusParam
+from focus.cfg import LocusParamConfig
 from sensor_msgs.msg import CompressedImage
 
 class Convolution:
@@ -25,13 +25,14 @@ class Convolution:
     
 class Locus:
     def __init__(self):
-        self.config_srv = dynamic_reconfigure.server.Server(LocusParam, self.on_reconf)
-        self.sub        = rospy.Subscriber("/image_in/compressed",  CompressedImage, self.on_image,  queue_size = 1)
-        self.pub        = rospy.Publisher ("/image_out/compressed", CompressedImage,                 queue_size = 1)
+        self.config_srv = dynamic_reconfigure.server.Server(LocusParamConfig, self.on_reconf)
+        self.sub        = rospy.Subscriber("in/compressed",  CompressedImage, self.on_image,  queue_size = 1)
+        self.pub        = rospy.Publisher ("out/compressed", CompressedImage,                 queue_size = 1)
         self.img_width  = 0
         self.img_height = 0
         
     def on_image(self, ros_data):
+        print('on image')
         # image in
         compressed_in = np.fromstring(ros_data.data, np.uint8)
         image_in      = cv2.imdecode(compressed_in, cv2.IMREAD_GRAYSCALE)
@@ -42,7 +43,7 @@ class Locus:
         msg              = CompressedImage()
         msg.header.stamp = rospy.Time.now()
         msg.format       = "jpeg"
-        msg.data         = np.array(cv2.imencode('.jpg', image_out)[1]).tostring()
+        msg.data         = np.array(cv2.imencode('.jpg', image_in)[1]).tostring()
         self.pub.publish(msg)
 
         
@@ -53,4 +54,6 @@ class Locus:
     
 rospy.init_node('locus_node', anonymous=True)
 locus = Locus()
+rospy.spin()
+
 
