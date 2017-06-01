@@ -32,7 +32,7 @@ public:
 
   Param() 
     : _blur(.005),
-      _r(.2), _q(.4), _d(3), 
+      _r(.5), _q(.5), _d(2), 
       _lgnSide(200),
       _focus_freeze(1000) {}
 };

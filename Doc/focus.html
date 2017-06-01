@@ -16,12 +16,12 @@
       }
     </script>
     
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-</script>
-<script type="text/javascript"
-  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript"
+	    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
 
 
     <title>Focus</title>
@@ -47,8 +47,8 @@
       <div id="section">Overview</div>
 
 
-    <div id="core">
-      The competition is done with a neural field defined in the paper "Dynamic formation of self-organizing maps" (<a href="focus/wsom2014.pdf">PDF</a>). The equations governing the dynamic of the neural field are given below. The position $x$ is a 2D discrete position $x \in [0, N-1]^2$.
+      <div id="core">
+	The competition is done with a neural field defined in the paper "Dynamic formation of self-organizing maps" (<a href="focus/wsom2014.pdf">PDF</a>). The equations governing the dynamic of the neural field are given below. The position $x$ is a 2D discrete position $x \in [0, N-1]^2$.
 
 	<center><img src="focus/eqWSOM.png" width=75%></center>
 
@@ -63,21 +63,24 @@
       </div>
       
 
-    <div id="section">ROS integration</div>
-    
-    <div id="core">
-      The focus module provides a single node which can be tested with the focus-demo.launch launch file which works with a USB camera and the <a href="color_filter.html">color_filter</a> module for providing a grayscale input to the neural field.<br/>
 
-      <center><pre id="code">roslaunch focus focus-demo.launch</pre></center><br/>
+      <div id="section">ROS integration</div>
 
-      You can also test the full loop with the lgn2v1, color_filter and focus nodes by calling: <br/>
-
-      <center><pre id="code">roslaunch focus focus-lgn-demo.launch</pre></center><br/>
+      <div id="subsection">Focus</div>
       
-      This distorts the input, filter the distorted image, performs the competition and loops back where to shift the attention to the lgn2v1 node.<br/>
+      <div id="core">
+	The focus module provides a single node which can be tested with the focus-demo.launch launch file which works with a USB camera and the <a href="color_filter.html">color_filter</a> module for providing a grayscale input to the neural field.<br/>
 
-      
-      The communication with the node is realized by topics and a dynamic reconfiguration of parameters. The topic are the following ones:
+	<center><pre id="code">roslaunch focus focus-demo.launch</pre></center><br/>
+
+	You can also test the full loop with the lgn2v1, color_filter and focus nodes by calling: <br/>
+
+	<center><pre id="code">roslaunch focus focus-lgn-demo.launch</pre></center><br/>
+	
+	This distorts the input, filter the distorted image, performs the competition and loops back where to shift the attention to the lgn2v1 node.<br/>
+
+	
+	The communication with the node is realized by topics and a dynamic reconfiguration of parameters. The topic are the following ones:
 	<table>
 	  <tr> <td><b>Name</b></td> <td><b>Message</b></td> <td><b>Direction</b></td> <td><b>Meaning</b></td></tr>
 	  <tr> <td>in    </td> <td>sensor_msgs/Image  </td> <td>subscribe</td> <td>input grayscale image</td> </tr>
@@ -86,8 +89,13 @@
 	</table>
       </div>
 
-      
+      <div id="subsection">Locus</div>
 
+      <div id="core">
+	The locus node is similar to focus, but the computation is made from a convolution (i.e. no neural field involved).
+	<center><pre id="code">roslaunch focus locus-demo.launch</pre></center><br/>
+	or
+	<center><pre id="code">roslaunch focus locus-lgn-demo.launch</pre></center><br/>
     </div>
   </body>
 </html>

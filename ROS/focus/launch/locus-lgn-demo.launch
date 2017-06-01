@@ -5,16 +5,12 @@
     <param name="pixel_format" value="yuyv" />
   </node>
 
-  <node name="raw_view" pkg="image_view" type="image_view">
-    <remap from="image" to="/video/image_raw"/>
-  </node>
-
-
   <group ns="lgn2v1">
     <node name="converter" pkg="lgn2v1" type="lgn2v1-node">
       <remap from="in" to="/video/image_raw" />
     </node>
   </group>
+  
   <node name="gaze_view" pkg="image_view" type="image_view">
     <remap from="image" to="/lgn2v1/gaze"/>
   </node>
@@ -28,20 +24,22 @@
   <node name="filtered_view" pkg="image_view" type="image_view">
     <remap from="image" to="/color_filter/filtered"/>
   </node>
-  <node name="reconf" pkg="rqt_reconfigure" type="rqt_reconfigure"/>
-
-
+  
 
   <group ns="focus">
-    <node name="focus" pkg="focus" type="focus-node">
-      <remap from="in" to="/color_filter/filtered"/>
+    <node name="locus" pkg="focus" type="locus.py">
+      <remap from="in/compressed" to="/color_filter/filtered/compressed"/>
       <remap from="shift" to="/lgn2v1/shift"/>
     </node>
   </group>
 
 
   <node name="focus_view" pkg="image_view" type="image_view">
+    <param name="image_transport" value="compressed"/>
     <remap from="image" to="/focus/out"/>
   </node>
+
+  <node name="reconf" pkg="rqt_reconfigure" type="rqt_reconfigure"/>
+
 
 </launch>
