@@ -16,6 +16,7 @@ pkg_check_modules(FFTW fftw3 REQUIRED)
 
 generate_dynamic_reconfigure_options(
   cfg/param.cfg
+  cfg/locus.cfg
 )
 
 
@@ -49,3 +50,11 @@ add_executable(focus-node src/focus-node.cc)
 add_dependencies(focus-node neuralfield)
 target_link_libraries(focus-node ${catkin_LIBRARIES} neuralfield)
 
+###########
+#         #
+# Install #
+#         #
+###########
+
+install(PROGRAMS scripts/locus.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

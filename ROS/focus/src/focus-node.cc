@@ -117,7 +117,7 @@ int main(int argc, char **argv) {
   nf_params.Am = 1.0;
   nf_params.sm = 30.0;
   nf_params.circular_symmetric = false;
-  double shift_freeze_duration = .2;
+  double shift_freeze_duration = .1;
   double max_small_shift_radius_2 = .2*.2;
   focus::NeuralField nf(nf_params);
 
