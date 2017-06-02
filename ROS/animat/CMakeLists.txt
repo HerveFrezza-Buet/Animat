@@ -5,9 +5,26 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   geometry_msgs
+  image_transport
+  cv_bridge
+  dynamic_reconfigure
 )
 
-catkin_package()
+generate_dynamic_reconfigure_options(
+  cfg/vision.cfg
+)
+
+
+
+catkin_package(
+  CATKIN_DEPENDS 
+  rospy
+  std_msgs
+  image_transport
+  cv_bridge
+  dynamic_reconfigure
+)
+
 
 catkin_install_python(
   PROGRAMS 

@@ -27,6 +27,7 @@ catkin_package(
   std_msgs
   image_transport
   cv_bridge
+  dynamic_reconfigure
 )
 
 

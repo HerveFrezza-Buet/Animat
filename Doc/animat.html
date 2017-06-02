@@ -45,8 +45,9 @@
 	The topics are the following ones:
 	<table>
 	  <tr> <td><b>Name</b>    </td> <td><b>Message</b>     </td> <td><b>Direction</b></td> <td><b>Meaning</b></td></tr>
-	  <tr> <td>in/compressed  </td> <td>sensor_msgs/Image  </td> <td>subscribe       </td> <td>input image (grayscaled)</td> </tr>
-	  <tr> <td>shift          </td> <td>geometry_msgs/Point</td> <td>subscribe       </td> <td>get the neural field position</td> </tr>
+	  <tr> <td>raw/compressed  </td> <td>sensor_msgs/Image </td> <td>subscribe       </td> <td>raw input image, used for display on gaze/compressed</td> </tr>
+	  <tr> <td>in/compressed  </td> <td>sensor_msgs/Image  </td> <td>subscribe       </td> <td>lgn sailancy image</td> </tr>
+	  <tr> <td>gaze/compressed  </td> <td>sensor_msgs/Image  </td> <td>advertise       </td> <td>output image, where raw is decorated</td> </tr>
 	  <tr> <td>focus          </td> <td>geometry_msgs/Point</td> <td>subscribe       </td> <td>get the focus position</td> </tr>
 	  <tr> <td>lookat         </td> <td>geometry_msgs/Point</td> <td>advertise       </td> <td>set the focus position</td> </tr>
 	  <tr> <td>command        </td> <td>std_msgs/String    </td> <td>subscribe       </td> <td>get some command</td> </tr>
