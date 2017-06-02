@@ -39,14 +39,12 @@
 
       <div id="core">
 	This modules determines where to focus attention from a grayscale image produced, for example by the <a href="color_filter.html">color_filter</a> module. The focus-node performs a competition to determine the region where the input grayscale image is locally maximal.
-
-
       </div>
 
 
       <div id="section">Overview</div>
 
-
+      <div id="subsection">Focus</div>
       <div id="core">
 	The competition is done with a neural field defined in the paper "Dynamic formation of self-organizing maps" (<a href="focus/wsom2014.pdf">PDF</a>). The equations governing the dynamic of the neural field are given below. The position $x$ is a 2D discrete position $x \in [0, N-1]^2$.
 
@@ -58,8 +56,19 @@
 	  <li>$g(x,y)=\exp(-\frac{d(x,y)^2}{2 \sigma_g^2})$ is a gaussian of parameter $\sigma_g$</li>
 	  <li>$d(x,y)$ is a distance between locations $x$ and $y$ in the field. It can be the euclidean distance $d(x,y) = \sqrt{\sum_i (x_i-y_i)^2}$ or a circular symmetric distance. For a neural field of side $N$, the circular symmetric distance is defined as $d(x,y) = \sqrt{\sum_i \min(|x_i-y_i|,N-|x_i -y_i|)^2}$</li>
 	</ul>
-
-
+      </div>
+      
+      <div id="subsection">Locus</div>
+      
+      
+      <div id="core">
+	The locus node is similar to focus, but the computation is made from a convolution (i.e. no neural field involved). The input image is convoluated by the following kernel:
+	<ul>
+	  <li> $k(w,h) = 1$ if $r<\mathrm{kp}_{\mathrm{rad}}$</li>
+	  <li> $k(w,h) = - \left(\mathrm{ki}_{\mathrm{ratio}}\displaystyle\frac{r}{\mathrm{kp}_{\mathrm{rad}}}\right)^2$ if $r \in [\mathrm{kp}_{\mathrm{rad}},\mathrm{k}_{\mathrm{size}}]$</li>
+	  <li> $k(w,h) = - \left(\mathrm{ki}_{\mathrm{ratio}}\displaystyle\frac{\mathrm{k}_{\mathrm{size}}}{\mathrm{kp}_{\mathrm{rad}}}\right)^2$ otherwise</li>
+	  <li> where $r$ is the distance from $(x,y)$ to the center of the kernel. A distance 1 corresponds to the image longest side (width usually).
+	</ul>
       </div>
       
 
@@ -87,15 +96,24 @@
 	  <tr> <td>out  </td> <td>sensor_msgs/Image  </td> <td>publish  </td> <td>neural field output activities $f(v(x,t))$</td> </tr>
 	  <tr> <td>shift </td> <td>geometry_msgs/Point</td> <td>publish  </td> <td>where the input is locally maximal $(lw,lh,0)$ with $lw, lh \in [-0.5, 0.5]^2$ as defined on <a href="lgn2v1.html">lgn2v1</a></td> </tr>
 	</table>
+      
       </div>
+      
 
       <div id="subsection">Locus</div>
 
       <div id="core">
-	The locus node is similar to focus, but the computation is made from a convolution (i.e. no neural field involved).
 	<center><pre id="code">roslaunch focus locus-demo.launch</pre></center><br/>
 	or
 	<center><pre id="code">roslaunch focus locus-lgn-demo.launch</pre></center><br/>
+	<br/>
+	The communication with the node is realized by topics and a dynamic reconfiguration of parameters. The topic are the following ones:
+	<table>
+	  <tr> <td><b>Name</b></td> <td><b>Message</b></td> <td><b>Direction</b></td> <td><b>Meaning</b></td></tr>
+	  <tr> <td>in/compressed    </td> <td>sensor_msgs/Image  </td> <td>subscribe</td> <td>input grayscale image</td> </tr>
+	  <tr> <td>out/compressed  </td> <td>sensor_msgs/Image  </td> <td>publish  </td> <td> Rescaled input activities and focus point</td> </tr>
+	  <tr> <td>shift </td> <td>geometry_msgs/Point</td> <td>publish  </td> <td>where the input is locally maximal $(lw,lh,0)$ with $lw, lh \in [-0.5, 0.5]^2$ as defined on <a href="lgn2v1.html">lgn2v1</a></td> </tr>
+	</table>
     </div>
   </body>
 </html>

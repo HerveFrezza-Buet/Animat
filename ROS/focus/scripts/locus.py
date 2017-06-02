@@ -13,7 +13,7 @@ from geometry_msgs.msg import Point
 
 
 class Convolution:
-    def __init__(self,kernel,dest_shape, init_closest, value=0):
+    def __init__(self,kernel,dest_shape, value):
         if dest_shape[1] % 2 != 0 :
             print("\n\n\n\nfilter.Convolution.__init__ : Warning : dest_shape[1] should be even ! \n\n\n\n")
         mask = np.zeros(dest_shape, np.float64)
@@ -34,30 +34,6 @@ class Convolution:
         size_w     = min(kernel.shape[1], dest_shape[1])
 
         mask[m_min_h:m_min_h+size_h, m_min_w:m_min_w+size_w] = kernel[k_min_h:k_min_h+size_h, k_min_w:k_min_w+size_w]
-
-        if init_closest :
-            # Let us pad
-
-            if m_min_w != 0 :
-                for h in range(m_min_h, m_min_h+size_h) :
-                    mask[h, 0:m_min_w] = mask[h,m_min_w]
-            if m_min_h != 0 :
-                for w in range(m_min_w, m_min_w+size_w) :
-                    mask[0:m_min_h, w] = mask[m_min_h, w]
-            if m_min_w + size_w < dest_shape[1]:
-                for h in range(m_min_h, m_min_h+size_h) :
-                    mask[h, m_min_w+size_w:] = mask[h,m_min_w+size_w-1]
-            if m_min_h + size_h < dest_shape[0]:
-                for w in range(m_min_w, m_min_w+size_w) :
-                    mask[m_min_h+size_h:, w] = mask[m_min_h+size_h-1, w]
-            if m_min_w != 0 and m_min_h != 0:
-                mask[0:m_min_h, 0:m_min_w] =  mask[m_min_h,m_min_w]
-            if m_min_w != 0 and m_min_h + size_h < dest_shape[0]:
-                mask[m_min_h+size_h:, 0:m_min_w] =  mask[m_min_h+size_h-1,m_min_w]
-            if m_min_w + size_w < dest_shape[1] and m_min_h != 0:
-                mask[0:m_min_h, m_min_w+size_w:] =  mask[m_min_h,m_min_w+size_w-1]
-            if m_min_w + size_w < dest_shape[1] and m_min_h + size_h < dest_shape[0]:
-                mask[m_min_h+size_h:, m_min_w+size_w:] =  mask[m_min_h+size_h-1,m_min_w+size_w-1]
         
         self.mask     = np.roll(np.roll(mask,-m_center_w, axis=1),-m_center_h, axis=0)
         self.fft_mask = np.fft.rfft2(self.mask)
@@ -72,7 +48,7 @@ class Locus:
 
     def make_conv(self) :
         if self.kernel is not None and self.in_shape is not None :
-            self.conv = Convolution(self.kernel, self.in_shape, True)
+            self.conv = Convolution(self.kernel, self.in_shape, self.kernel[0,0])
             
     def check_in(self, image):
         make = False
@@ -80,8 +56,9 @@ class Locus:
             self.in_shape = image.shape
             self.img_coef      = 1.0/image.shape[1]
             make = True
-        if self.kp_rad is not self.k_kp_rad or self.ki_ratio is not self.k_ki_ratio:
+        if self.kp_rad is not self.k_kp_rad or self.ki_ratio is not self.k_ki_ratio or self.ksize is not self.k_ksize:
             self.k_kp_rad = self.kp_rad
+            self.k_ksize = self.ksize
             self.k_ki_ratio = self.ki_ratio
             make = True
         if make :
@@ -125,18 +102,22 @@ class Locus:
 
         
     def make_kernel(self):
-        ksize = 100
-        if self.in_shape is not None :
-            ksize = min(self.in_shape[0], self.in_shape[1])-10
+        ksize = (int)(self.k_ksize*self.in_shape[1])
+        coef = 1.0/self.in_shape[1]
+        if ksize % 2 is 0 :
+            ksize += 1
         half_ksize = ksize//2
         self.kernel = np.zeros((ksize,ksize), dtype=np.float32)
+        minval = - (self.k_ki_ratio*self.k_ksize)**2
         for h in range(ksize) :
             dh = (h-half_ksize)**2
             for w in range(ksize) :
-                r  = math.sqrt(dh + (w-half_ksize)**2)/ksize
+                r  = math.sqrt(dh + (w-half_ksize)**2)*coef
                 rr = r/self.k_kp_rad
                 if r < self.k_kp_rad :
                     self.kernel[h,w] = 1
+                if r > self.k_ksize :
+                    self.kernel[h,w] = minval
                 else :
                     self.kernel[h,w] = - (self.k_ki_ratio*rr)**2
         
@@ -151,6 +132,7 @@ class Locus:
         self.max_small_shift_radius_2 = config['shift_rad']**2
         self.kp_rad = config['kp_rad']
         self.ki_ratio = config['ki_ratio']
+        self.ksize = config['ksize']
         return config
     
     def __init__(self):
@@ -160,8 +142,10 @@ class Locus:
         self.kernel = None
         self.kp_rad = None
         self.ki_ratio = None
+        self.ksize = None
         self.k_kp_rad = 0
         self.k_ki_ratio = 0
+        self.k_ksize = 0
         
         self.min_input                =  0
         self.max_input                = 20
