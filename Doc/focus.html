@@ -43,6 +43,11 @@
 
 
       <div id="section">Overview</div>
+      
+      <div id="subsection">Stabilization</div>
+      <div id="core">
+	The focus module outputs a position in the image. This position is dedicated to be used for controling the point of attention (it we focus on the left, one may want to turn the video device to the left accordingly). Due to delays, such servoing needs to be stabilized, in order to get rid off oscillations. To do so, it if the focus changes abruptly, it is sent on the output topic, but a latency period starts. During this period, no output is provided. The latency period can be set, as well as a radius telling whether the focus change is "abrupt" or not.
+      </div>
 
       <div id="subsection">Focus</div>
       <div id="core">
@@ -80,11 +85,11 @@
       <div id="core">
 	The focus module provides a single node which can be tested with the focus-demo.launch launch file which works with a USB camera and the <a href="color_filter.html">color_filter</a> module for providing a grayscale input to the neural field.<br/>
 
-	<center><pre id="code">roslaunch focus focus-demo.launch</pre></center><br/>
+	<pre id="code">roslaunch focus focus-demo.launch</pre><br/>
 
 	You can also test the full loop with the lgn2v1, color_filter and focus nodes by calling: <br/>
 
-	<center><pre id="code">roslaunch focus focus-lgn-demo.launch</pre></center><br/>
+	<pre id="code">roslaunch focus focus-lgn-demo.launch</pre><br/>
 	
 	This distorts the input, filter the distorted image, performs the competition and loops back where to shift the attention to the lgn2v1 node.<br/>
 
@@ -103,9 +108,9 @@
       <div id="subsection">Locus</div>
 
       <div id="core">
-	<center><pre id="code">roslaunch focus locus-demo.launch</pre></center><br/>
+	<pre id="code">roslaunch focus locus-demo.launch</pre><br/>
 	or
-	<center><pre id="code">roslaunch focus locus-lgn-demo.launch</pre></center><br/>
+	<pre id="code">roslaunch focus locus-lgn-demo.launch</pre><br/>
 	<br/>
 	The communication with the node is realized by topics and a dynamic reconfiguration of parameters. The topic are the following ones:
 	<table>
@@ -114,7 +119,31 @@
 	  <tr> <td>out/compressed  </td> <td>sensor_msgs/Image  </td> <td>publish  </td> <td> Rescaled input activities and focus point</td> </tr>
 	  <tr> <td>shift </td> <td>geometry_msgs/Point</td> <td>publish  </td> <td>where the input is locally maximal $(lw,lh,0)$ with $lw, lh \in [-0.5, 0.5]^2$ as defined on <a href="lgn2v1.html">lgn2v1</a></td> </tr>
 	</table>
-    </div>
+      </div>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
   </body>
 </html>
 
