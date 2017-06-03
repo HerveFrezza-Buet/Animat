@@ -46,6 +46,7 @@ private:
   cv::Point2f focus;
 
 public:
+  
   Focus() = delete;
   Focus(const Focus&) = delete;
   Focus& operator=(const Focus&) = delete;
@@ -130,7 +131,7 @@ int main(int argc, char **argv) {
   cv::Mat result;
   Param param;
   Lgn lgn(param,result);
-  ros::Rate loop_rate(10);
+  ros::Rate loop_rate(5);
   Focus focus(param._focus_freeze);
 
   dynamic_reconfigure::Server<lgn2v1::ParamConfig> server;
@@ -149,13 +150,14 @@ int main(int argc, char **argv) {
   ros::Subscriber                 focus_lgn_sub = n.subscribe<geometry_msgs::Point>("shift", 1, boost::bind(on_lgn_focus,_1,boost::ref(focus),boost::ref(lgn)));
   ros::Publisher                  focus_pub     = n.advertise<geometry_msgs::Point>("focus", 1);
 
-  while (ros::ok()) { 
+  while (ros::ok()) {
+
     geometry_msgs::Point pt_msg;
     auto foc = focus.get();
     pt_msg.x = foc.x;
     pt_msg.y = foc.y;
     focus_pub.publish(pt_msg);
-
+    
     ros::spinOnce();
     loop_rate.sleep();
   }

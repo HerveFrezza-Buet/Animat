@@ -21,10 +21,13 @@ class Vision:
         self.focus_excentricity = .15
         self.center_point = Point(0,0,0)
         self.center_intensity  = 0
-        self.focus_max_speed   = .02
+        self.focus_max_speed   = .5
+        self.fovea_radius      = .05
         self.focus_time        = rospy.Time.now()
-        self.focus             = None
+        self.focus             = Point()
         self.stable_focus      = False
+        self.last_fast_focus   = rospy.Time.now()
+        self.wait_stable_focus = .5
         self.focus_area        = "focus_unstable"
         self.config_srv = dynamic_reconfigure.server.Server(VisionParamConfig, self.on_reconf)
         self.raw_sub           = rospy.Subscriber("raw/compressed", CompressedImage, self.on_raw,     queue_size = 1)
@@ -41,6 +44,8 @@ class Vision:
         self.focus_near         = config['near_limit']  
         self.focus_excentricity = config['center_limit']
         self.focus_max_speed    = config['focus_max_speed']  
+        self.fovea_radius       = config['fovea_radius']
+        self.wait_stable_focus  = config['wait_stable']
         return config
     
     def on_command(self, command):
@@ -60,7 +65,12 @@ class Vision:
         current = rospy.Time.now()
         if self.focus is not None :
             speed = math.sqrt((focus.x - self.focus.x)**2 + (focus.y - self.focus.y)**2) / (current - self.focus_time).to_sec()
-            self.stable_focus = speed < self.focus_max_speed
+            if speed > self.focus_max_speed :
+                self.last_fast_focus   = rospy.Time.now()
+                self.stable_focus = False
+            else :
+                self.stable_focus = (rospy.Time.now() - self.last_fast_focus).to_sec() > self.wait_stable_focus
+        
         self.focus = focus
         self.focus_time = current
         area = None
@@ -104,9 +114,14 @@ class Vision:
             color = (0,0,255)
             if self.stable_focus :
                 color = (0,255,0)
-            cv2.circle(image_in, (fx, fy) , 20, color,  3)
-            cv2.line(image_in, (fx-30, fy) , (fx+30, fy), color,  3)
-            cv2.line(image_in, (fx, fy-30) , (fx, fy+30), color,  3)
+            rad    = 30
+            margin = 10
+            r  = (int)(rad*self.center_intensity)
+            rr = rad+margin
+            cv2.circle(image_in, (fx, fy) , rad, color,  3)
+            cv2.circle(image_in, (fx, fy) , r, color,  -1)
+            cv2.line(image_in, (fx-rr, fy) , (fx+rr, fy), color,  3)
+            cv2.line(image_in, (fx, fy-rr) , (fx, fy+rr), color,  3)
             
             # image out
             msg              = CompressedImage()
@@ -124,13 +139,14 @@ class Vision:
         width         = image_in.shape[1]
         height        = image_in.shape[0]
         
-        """#### Processing ####
+        #### Processing ####
         w_2 = int(width*.5)
         h_2 = int(height*.5)
-        center = image_in[h_2 - param_lgn_center_radius : h_2 + param_lgn_center_radius+1,
-                          w_2 - param_lgn_center_radius : w_2 + param_lgn_center_radius+1]
+        rad = int(self.fovea_radius*width)
+        center = image_in[h_2 - rad : h_2 + rad+1,
+                          w_2 - rad : w_2 + rad+1]
         self.center_intensity = np.average(center)/255.0
-        self.fovea_pub.publish(self.center_intensity)"""
+        self.fovea_pub.publish(self.center_intensity)
 
     
 if __name__ == '__main__':

@@ -51,7 +51,7 @@
 	  <tr> <td>focus          </td> <td>geometry_msgs/Point</td> <td>subscribe       </td> <td>get the focus position</td> </tr>
 	  <tr> <td>lookat         </td> <td>geometry_msgs/Point</td> <td>advertise       </td> <td>set the focus position</td> </tr>
 	  <tr> <td>command        </td> <td>std_msgs/String    </td> <td>subscribe       </td> <td>get some command</td> </tr>
-	  <tr> <td>fovea          </td> <td>std_msgs/Float32   </td> <td>advertise       </td> <td>provides a detection ratio in the fovea in [0,1].</td> </tr>
+	  <tr> <td>fovea          </td> <td>std_msgs/Float32   </td> <td>advertise       </td> <td>provides a detection ratio in the fovea in [0,1] (i.e. at the center, in a fovea_radius-sized circle). </td> </tr>
 	  <tr> <td>events         </td> <td>std_msgs/String    </td> <td>advertise       </td> <td>notifies visual events</td> </tr>
 	  <tr> <td>hsv            </td> <td>color_filter/HSVParams </td> <td>advertise   </td> <td>tells which color has to be selected by the filter</td> </tr>
 	</table>
@@ -68,10 +68,8 @@
       <div id="core">
 	The visual events are:
 	<ul>
-	  <li>focus_unstable : The focus gets out of stability.</li>
+	  <li>focus_unstable : The focus gets out of stability. Stability is measured from the speed of the focus motion. Bolow some max_speed threshold, the focus is considered to be slow. If it has been slow from a certain duration, the focus is considered as stable.</li>
 	  <li>focus_X_Y : the focus enters in a focus area. X in {near,far} and Y in {left,center,right}</li>
-	  <li>fovea_on : something stable occurs in the fovea.</li>
-	  <li>fovea_off : the fovea gets out of stability.</li>
 	</ul>
       </div>
 
