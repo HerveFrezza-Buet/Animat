@@ -11,6 +11,9 @@
     </node>
   </group>
   
+  <node name="retinal_view" pkg="image_view" type="image_view">
+    <remap from="image" to="/lgn2v1/lgn"/>
+  </node>
 
   <group ns="color_filter">
     <node name="filter" pkg="color_filter" type="color-filter-hsv-node">
