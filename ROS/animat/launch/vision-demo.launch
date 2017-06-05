@@ -46,7 +46,7 @@
       <remap from="in/compressed" to="/color_filter/filtered/compressed"/>
       <remap from="focus" to="/lgn2v1/focus"/>
       <remap from="lookat" to="/lgn2v1/lookat"/>
-      <remap from="hsv" to="/color_filter/params"/>-
+      <remap from="hsv" to="/color_filter/params"/>
     </node>
   </group>
   

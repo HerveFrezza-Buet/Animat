@@ -5,35 +5,30 @@
       <remap from="in" to="/smallbot/front" />
     </node>
   </group>
-  <node name="gaze_view" pkg="image_view" type="image_view">
-    <remap from="image" to="/lgn2v1/gaze"/>
-  </node>
 
   <group ns="color_filter">
     <node name="filter" pkg="color_filter" type="color-filter-hsv-node">
       <remap from="in" to="/lgn2v1/lgn" />
     </node>
   </group>
-  <node name="filtered_view" pkg="image_view" type="image_view">
-    <remap from="image" to="/color_filter/filtered"/>
-  </node>
 
   <group ns="focus">
-    <node name="focus" pkg="focus" type="focus-node">
-      <remap from="in" to="/color_filter/filtered"/>
+    <node name="locus" pkg="focus" type="locus.py">
+      <remap from="in/compressed" to="/color_filter/filtered/compressed"/>
       <remap from="shift" to="/lgn2v1/shift"/>
     </node>
   </group>
 
   <node name="focus_view" pkg="image_view" type="image_view">
-    <remap from="image" to="/focus/out"/>
+    <remap from="image" to="/color_filter/filtered"/>
   </node>
+  
   
   <group ns="animat">
     <group ns="vision">
       <node name="vision" pkg="animat" type="vision.py">
+	<remap from="raw/compressed" to="/smallbot/front/compressed"/>
 	<remap from="in/compressed" to="/color_filter/filtered/compressed"/>
-	<remap from="shift" to="/lgn2v1/shift"/>
 	<remap from="focus" to="/lgn2v1/focus"/>
 	<remap from="lookat" to="/lgn2v1/lookat"/>
 	<remap from="hsv" to="/color_filter/params"/>
@@ -54,10 +49,15 @@
     </group>
     
     <node name="animat_teleop" pkg="animat" type="animat_teleop.py" output="screen" launch-prefix="xterm -e">
-	<remap from="body" to="/animat/embodiment/command"/>
-	<remap from="vision" to="/animat/vision/command"/>
+      <remap from="body" to="/animat/embodiment/command"/>
+      <remap from="vision" to="/animat/vision/command"/>
     </node>
     
   </group>
+  
+  <node name="gaze_view" pkg="image_view" type="image_view">
+    <param name="image_transport" value="compressed"/>
+    <remap from="image" to="/animat/vision/gaze"/>
+  </node>
 
 </launch>
