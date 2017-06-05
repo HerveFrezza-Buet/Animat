@@ -20,7 +20,8 @@ public:
   double _q;  
   double _d;  
   int    _lgnSide;   
-  int    _focus_freeze;   
+  int    _focus_freeze;
+  double _alpha;
 
   double blur()           const {return _blur;}
   double r()              const {return _r;}
@@ -28,13 +29,15 @@ public:
   double d()              const {return _d;}
   int    lgnSide()        const {return _lgnSide;}
   int    focus_freeze()   const {return _focus_freeze;}
+  double alpha()          const {return _alpha;}
 
 
   Param() 
     : _blur(.005),
       _r(.5), _q(.5), _d(2), 
       _lgnSide(200),
-      _focus_freeze(1000) {}
+      _focus_freeze(1000),
+      _alpha(60) {}
 };
 
 typedef lgn2v1::LGN<Param> Lgn;
@@ -76,6 +79,7 @@ void on_reconf(lgn2v1::ParamConfig &config, uint32_t level, Param& param) {
   param._d = config.d;
   param._lgnSide = config.lgnSide;
   param._focus_freeze = config.focus_freeze;
+  param._alpha = config.alpha;
 }
 
 
@@ -127,8 +131,8 @@ void on_lgnconv_focus(const geometry_msgs::Point::ConstPtr& msg, Focus& focus, L
   geometry_msgs::Point pt_msg;
   auto foc_init = focus.get();
   auto foc_end  = lgn.whereIs(cv::Point2f(msg->x,msg->y));
-  pt_msg.x = foc_end.x - foc_init.x;
-  pt_msg.y = foc_end.y - foc_init.y;
+  pt_msg.x = lgn.param.alpha()*(foc_end.x - foc_init.x);
+  pt_msg.y = lgn.param.alpha()*(foc_end.y - foc_init.y);
   dfocus_pub.publish(pt_msg);
 }
 
