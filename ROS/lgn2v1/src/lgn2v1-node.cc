@@ -119,9 +119,17 @@ void on_focus(const geometry_msgs::Point::ConstPtr& msg,
 
 void on_lgn_focus(const geometry_msgs::Point::ConstPtr& msg,
 		  Focus& focus,Lgn& lgn) {
-
-  auto foc = lgn.whereIs(cv::Point2f(msg->x,msg->y));			 
+		 
   focus.try_set(lgn.whereIs(cv::Point2f(msg->x,msg->y)));		  
+}
+
+void on_lgnconv_focus(const geometry_msgs::Point::ConstPtr& msg, Focus& focus, Lgn& lgn, ros::Publisher& dfocus_pub) {
+  geometry_msgs::Point pt_msg;
+  auto foc_init = focus.get();
+  auto foc_end  = lgn.whereIs(cv::Point2f(msg->x,msg->y));
+  pt_msg.x = foc_end.x - foc_init.x;
+  pt_msg.y = foc_end.y - foc_init.y;
+  dfocus_pub.publish(pt_msg);
 }
 
 
@@ -146,12 +154,13 @@ int main(int argc, char **argv) {
 								       boost::ref(lgn), boost::ref(focus)));
 
 
-  ros::Subscriber                 focus_sub     = n.subscribe<geometry_msgs::Point>("lookat", 1, boost::bind(on_focus,_1,boost::ref(focus)));
-  ros::Subscriber                 focus_lgn_sub = n.subscribe<geometry_msgs::Point>("shift", 1, boost::bind(on_lgn_focus,_1,boost::ref(focus),boost::ref(lgn)));
-  ros::Publisher                  focus_pub     = n.advertise<geometry_msgs::Point>("focus", 1);
+  ros::Subscriber                 focus_sub         = n.subscribe<geometry_msgs::Point>("lookat", 1, boost::bind(on_focus,_1,boost::ref(focus)));
+  ros::Subscriber                 focus_lgn_sub     = n.subscribe<geometry_msgs::Point>("shift", 1, boost::bind(on_lgn_focus,_1,boost::ref(focus),boost::ref(lgn)));
+  ros::Publisher                  focus_pub         = n.advertise<geometry_msgs::Point>("focus", 1);
+  ros::Publisher                  dfocus_pub        = n.advertise<geometry_msgs::Point>("dfocus", 1);
+  ros::Subscriber                 focus_lgnconv_sub = n.subscribe<geometry_msgs::Point>("convert", 1, boost::bind(on_lgnconv_focus,_1,boost::ref(focus),boost::ref(lgn), boost::ref(dfocus_pub)));
 
   while (ros::ok()) {
-
     geometry_msgs::Point pt_msg;
     auto foc = focus.get();
     pt_msg.x = foc.x;
