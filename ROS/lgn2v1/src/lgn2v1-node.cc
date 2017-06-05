@@ -131,7 +131,7 @@ int main(int argc, char **argv) {
   cv::Mat result;
   Param param;
   Lgn lgn(param,result);
-  ros::Rate loop_rate(5);
+  ros::Rate loop_rate(100);
   Focus focus(param._focus_freeze);
 
   dynamic_reconfigure::Server<lgn2v1::ParamConfig> server;
