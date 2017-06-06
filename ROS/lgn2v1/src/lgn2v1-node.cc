@@ -131,8 +131,8 @@ void on_lgnconv_focus(const geometry_msgs::Point::ConstPtr& msg, Focus& focus, L
   geometry_msgs::Point pt_msg;
   auto foc_init = focus.get();
   auto foc_end  = lgn.whereIs(cv::Point2f(msg->x,msg->y));
-  pt_msg.x = lgn.param.alpha()*(foc_end.x - foc_init.x);
-  pt_msg.y = lgn.param.alpha()*(foc_end.y - foc_init.y);
+  pt_msg.x = lgn.param.alpha()*(foc_init.x - foc_end.x);
+  pt_msg.y = lgn.param.alpha()*(foc_init.y - foc_end.y);
   dfocus_pub.publish(pt_msg);
 }
 

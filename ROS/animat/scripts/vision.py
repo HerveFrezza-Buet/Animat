@@ -17,11 +17,11 @@ from animat.cfg import VisionParamConfig
 class Vision:
     
     def __init__(self):
-        self.focus_near         = .3  
-        self.focus_excentricity = .15
+        self.focus_near         = -10  
+        self.focus_excentricity =  10
         self.center_point = Point(0,0,0)
         self.center_intensity  = 0
-        self.focus_max_speed   = .5
+        self.focus_max_speed   = 3
         self.fovea_radius      = .05
         self.focus_time        = rospy.Time.now()
         self.focus             = Point()
@@ -35,9 +35,9 @@ class Vision:
         self.gaze_pub          = rospy.Publisher ("gaze/compressed", CompressedImage,                  queue_size = 1)
         self.focus_sub         = rospy.Subscriber("focus",          Point,           self.on_focus,   queue_size = 1)
         self.cmd_sub           = rospy.Subscriber("command",        String,          self.on_command, queue_size = 1)
-        self.lookat_pub        = rospy.Publisher ("lookat",         Point,                            queue_size = 1)
+        self.set_focus_pub        = rospy.Publisher ("set_focus",         Point,                            queue_size = 1)
         self.fovea_pub         = rospy.Publisher ("fovea",          Float32,                          queue_size = 1)
-        self.event_pub         = rospy.Publisher ("events",         String,                           queue_size = 1)
+        self.area_pub          = rospy.Publisher ("focus_area",     String,                           queue_size = 1)
         self.hsv_pub           = rospy.Publisher ("hsv",            HSVParams,                        queue_size = 1)
     
     def on_reconf(self, config, level):
@@ -56,7 +56,7 @@ class Vision:
         elif command.data == "dontcare" :
             self.hsv_pub.publish(HSVParams(  0,0,10,100,True))
         elif command.data == "reset" :
-            self.lookat_pub.publish(self.center_point)
+            self.set_focus_pub.publish(self.center_point)
         else :
             pass
             
@@ -73,23 +73,20 @@ class Vision:
         
         self.focus = focus
         self.focus_time = current
-        area = None
         if not self.stable_focus :
-            area = "focus_unstable"
+            self.focus_area = "focus_unstable"
         else :
             if focus.y > self.focus_near :
-                area = "focus_near"
+                self.focus_area = "focus_near"
             else :
-                area = "focus_far"
+                self.focus_area = "focus_far"
             if focus.x < -self.focus_excentricity :
-                area += "_left"
+                self.focus_area += "_left"
             elif focus.x > self.focus_excentricity :
-                area += "_right"
+                self.focus_area += "_right"
             else :
-                area += "_center"
-        if area != self.focus_area :
-            self.event_pub.publish(area)
-        self.focus_area = area
+                self.focus_area += "_center"
+        self.area_pub.publish(self.focus_area)
         
     def on_raw(self, ros_data):
         if self.gaze_pub.get_num_connections() > 0 :
@@ -99,15 +96,35 @@ class Vision:
             width         = image_in.shape[1]
             height        = image_in.shape[0]
 
-            darken = .5
+            Winw, Winh = 10,10
+            Wsize = 110
+            Aw, Bw, Cw, Dw = Winw+10, Winw+40, Winw+70, Winw+100
+            Ah, Bh, Ch     = Winh+10,          Winh+70, Winh+100
             
-            near = int((1 - self.focus_near)*height)
-            image_in[:near,:] = (darken*image_in[:near,:]).astype(np.uint8)
+            image_in[Winw:Winw+Wsize, Winh:Winh+Wsize, ...] = 0
+            cv2.line(image_in, (Aw,Ah), (Dw,Ah), (255,255,255) ,  3)
+            cv2.line(image_in, (Dw,Ah), (Dw,Ch), (255,255,255) ,  3)
+            cv2.line(image_in, (Dw,Ch), (Aw,Ch), (255,255,255) ,  3)
+            cv2.line(image_in, (Aw,Ch), (Aw,Ah), (255,255,255) ,  3)
+            cv2.line(image_in, (Bw,Ah), (Bw,Ch), (255,255,255) ,  3)
+            cv2.line(image_in, (Cw,Ah), (Cw,Ch), (255,255,255) ,  3)
+            cv2.line(image_in, (Aw,Bh), (Dw,Bh), (255,255,255) ,  3)
 
-            wmin = int((.5-self.focus_excentricity)*width)
-            wmax = int((.5+self.focus_excentricity)*width)
-            image_in[:,:wmin] = (darken*image_in[:,:wmin]).astype(np.uint8)
-            image_in[:,wmax:] = (darken*image_in[:,wmax:]).astype(np.uint8)
+            if self.focus_area == 'focus_far_left' :
+                image_in[Ah:Bh,Aw:Bw,...] = 255
+            elif self.focus_area == 'focus_far_center' :
+                image_in[Ah:Bh,Bw:Cw,...] = 255
+            elif self.focus_area == 'focus_far_right' :
+                image_in[Ah:Bh,Cw:Dw,...] = 255
+            elif self.focus_area == 'focus_near_left' :
+                image_in[Bh:Ch,Aw:Bw,...] = 255
+            elif self.focus_area == 'focus_near_center' :
+                image_in[Bh:Ch,Bw:Cw,...] = 255
+            elif self.focus_area == 'focus_near_right' :
+                image_in[Bh:Ch,Cw:Dw,...] = 255
+            
+            
+            
 
             fx = int(width*(.5 + self.focus.x)+.5)
             fy = int(height*(.5 + self.focus.y)+.5)
