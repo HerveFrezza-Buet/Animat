@@ -17,8 +17,12 @@ from animat.cfg import VisionParamConfig
 class Vision:
     
     def __init__(self):
-        self.focus_near         = -10  
-        self.focus_excentricity =  10
+        self.near_limit         = -10
+        self.near_below         = True
+        self.center_origin      =  10
+        self.center_limit       =  10
+        self.left_below         = False
+        self.keep_focus_centered = False
         self.center_point = Point(0,0,0)
         self.center_intensity  = 0
         self.focus_max_speed   = 3
@@ -41,11 +45,15 @@ class Vision:
         self.hsv_pub           = rospy.Publisher ("hsv",            HSVParams,                        queue_size = 1)
     
     def on_reconf(self, config, level):
-        self.focus_near         = config['near_limit']  
-        self.focus_excentricity = config['center_limit']
+        self.near_limit         = config['near_limit']  
+        self.near_below         = config['near_below']  
+        self.center_origin        = config['center_origin']
+        self.center_limit        = config['center_limit']
+        self.left_below         = config['left_below']  
         self.focus_max_speed    = config['focus_max_speed']  
         self.fovea_radius       = config['fovea_radius']
         self.wait_stable_focus  = config['wait_stable']
+        self.keep_focus_centered = config['keep_focus_centered']
         return config
     
     def on_command(self, command):
@@ -76,16 +84,30 @@ class Vision:
         if not self.stable_focus :
             self.focus_area = "focus_unstable"
         else :
-            if focus.y > self.focus_near :
-                self.focus_area = "focus_near"
+            if self.near_below :
+                if focus.y < self.near_limit :
+                    self.focus_area = "focus_near"
+                else :
+                    self.focus_area = "focus_far"
             else :
-                self.focus_area = "focus_far"
-            if focus.x < -self.focus_excentricity :
-                self.focus_area += "_left"
-            elif focus.x > self.focus_excentricity :
-                self.focus_area += "_right"
-            else :
-                self.focus_area += "_center"
+                if focus.y > self.near_limit :
+                    self.focus_area = "focus_near"
+                else :
+                    self.focus_area = "focus_far"
+            if self.left_below :
+                if focus.x < self.center_origin - self.center_limit :
+                    self.focus_area += "_left"
+                elif focus.x > self.center_origin + self.center_limit :
+                    self.focus_area += "_right"
+                else :
+                    self.focus_area += "_center"
+            else:
+                if focus.x < self.center_origin - self.center_limit :
+                    self.focus_area += "_right"
+                elif focus.x > self.center_origin + self.center_limit :
+                    self.focus_area += "_left"
+                else :
+                    self.focus_area += "_center"
         self.area_pub.publish(self.focus_area)
         
     def on_raw(self, ros_data):
@@ -125,9 +147,12 @@ class Vision:
             
             
             
-
-            fx = int(width*(.5 + self.focus.x)+.5)
-            fy = int(height*(.5 + self.focus.y)+.5)
+            if self.keep_focus_centered :
+                fx = width//2
+                fy = height//2
+            else:
+                fx = int(width*(.5 + self.focus.x)+.5)
+                fy = int(height*(.5 + self.focus.y)+.5)
             color = (0,0,255)
             if self.stable_focus :
                 color = (0,255,0)

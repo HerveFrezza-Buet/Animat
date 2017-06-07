@@ -48,10 +48,13 @@
     <group ns="embodiment">
       <node name="embodiment" pkg="animat" type="embodiment.py">
 	<remap from="cmd_vel" to="/smallbot/cmd_vel"/>
-	<remap from="area" to="/smallbot/area"/>
+	<remap from="area" to="/world/area"/>
 	<remap from="physio" to="/animat/physiology/command"/>
       </node>
     </group>
+
+    <node name="physio" pkg="rqt_plot" type="rqt_plot" args="/animat/physiology/hydration /animat/physiology/glycemia">
+    </node>
     
     <node name="animat_teleop" pkg="animat" type="animat_teleop.py" output="screen" launch-prefix="xterm -e">
       <remap from="body" to="/animat/embodiment/command"/>

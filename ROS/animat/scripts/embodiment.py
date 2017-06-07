@@ -15,7 +15,7 @@ class Embodiment:
         self.twist_pub = rospy.Publisher ('cmd_vel', Twist,                    queue_size = 1)
         
         self.linear  = .1
-        self.angular = .1
+        self.angular = .2
         self.twist   = Twist()
         self.time    = rospy.Time.now()
         self.area    = None 

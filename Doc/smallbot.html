@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-Equiv="Cache-Control" Content="no-cache" />
+    <meta http-Equiv="Pragma" Content="no-cache" />
+    <meta http-Equiv="Expires" Content="0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="./design/animat.css" type="text/css" rel="stylesheet"/>
+    <script src="./design/highlight/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="./design/prettify/src/run_prettify.js"></script>
+    <script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+    <script type="text/javascript">
+      function resizeIFrame(iRef) {
+      iRef.height = iRef.contentWindow.document.body.scrollHeight + 50 + "px";
+      }
+    </script>
+    
+    <title>smallbot</title>
+  </head>
+  
+  <body>
+
+    <div id="content">
+      
+      <div id="banner">
+      </div>
+      
+      
+      <div id="title">Smallbot</div>
+      
+      <div id="section">Smallbot</div>
+
+      <div id="core">
+	We provide a small khepera-like robot simulated under
+	V-REP. It handles a pan-tilt video device. It can be handled
+	by ROS.
+	<ul>
+	  <li><a href="../V-REP/smallbot.ttm">smallbot.ttm</a></li>
+	</ul>
+	Thetopics are the following ones:
+	<table>
+	  <tr> <td><b>Name</b>    </td> <td><b>Message</b>     </td> <td><b>Direction</b></td> <td><b>Meaning</b></td></tr>
+
+	  <tr> <td>cmd_vel       </td> <td>geometry_msgs/Twist    </td> <td>subscribe       </td> <td> Motion command</td> </tr>
+	  <tr> <td>front       </td> <td>sensor_msgs/Image </td> <td>publish       </td> <td> Video sensor</td> </tr>
+	  <tr> <td>camerapos      </td> <td>sensor_msgs/Point </td> <td>publish       </td> <td>The (pan,tilt,0) position of the camera. Angles are in degree.</td> </tr>
+	  <tr> <td>pantilt      </td> <td>sensor_msgs/Point </td> <td>subscribe       </td> <td>Set the (pan,tilt,0) position of the camera. Angles are in degree.</td> </tr>
+	  <tr> <td>dpantilt      </td> <td>sensor_msgs/Point </td> <td>subscribe       </td> <td>Modifies the position of the camera by adding (dpan,dtilt,0)  to the current position. Angles are in degree.</td> </tr>
+	</table>
+      </div>
+      
+      <div id="section">Food and water areas</div>
+      
+      <div id="core">
+	In the scene, there are specific areas where the robot can enter. When the robot is inside an area, a message is sent on a topic to tell the kind of area the robot is in.
+	
+	<table>
+	  <tr> <td><b>Name</b>    </td> <td><b>Message</b>     </td> <td><b>Direction</b></td> <td><b>Meaning</b></td></tr>
+
+	  <tr> <td>area       </td> <td>std_msgs/String    </td> <td>publish       </td> <td> When the robot is in an area, it published here its kind.</td> </tr>
+	</table>
+      </div>
+
+      <div id="subsection">Food areas</div>
+      <div id="core">
+	The publish "food" on the topic.
+	<ul>
+	  <li><a href="../V-REP/food.ttm">food.ttm</a></li>
+	</ul>
+      </div>
+
+      <div id="subsection">Water areas</div>
+      <div id="core">
+	The publish "water" on the topic.
+	<ul>
+	  <li><a href="../V-REP/water.ttm">water.ttm</a></li>
+	</ul>
+      </div>
+
+      <div id="section">Scenes</div>
+
+      <div id="core">
+	Here are scene examples :
+	<ul>
+	  <li><a href="../V-REP/xor.ttt">xor.ttt</a></li>
+	</ul>
+      </div>
+
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+  </body>
+</html>
