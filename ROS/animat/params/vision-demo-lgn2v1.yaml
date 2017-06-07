@@ -1,0 +1,29 @@
+!!python/object/new:dynamic_reconfigure.encoding.Config
+dictitems:
+  alpha: 60.0
+  blur: 0.005
+  d: 2.0
+  focus_freeze: 1000
+  groups: !!python/object/new:dynamic_reconfigure.encoding.Config
+    dictitems:
+      alpha: 60.0
+      blur: 0.005
+      d: 2.0
+      focus_freeze: 1000
+      groups: !!python/object/new:dynamic_reconfigure.encoding.Config
+        state: []
+      id: 0
+      lgnSide: 400
+      name: Default
+      parameters: !!python/object/new:dynamic_reconfigure.encoding.Config
+        state: []
+      parent: 0
+      q: 0.5
+      r: 0.5
+      state: true
+      type: ''
+    state: []
+  lgnSide: 400
+  q: 0.5
+  r: 0.5
+state: []

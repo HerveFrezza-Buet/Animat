@@ -1,0 +1,29 @@
+!!python/object/new:dynamic_reconfigure.encoding.Config
+dictitems:
+  groups: !!python/object/new:dynamic_reconfigure.encoding.Config
+    dictitems:
+      groups: !!python/object/new:dynamic_reconfigure.encoding.Config
+        state: []
+      id: 0
+      ki_ratio: 5.0
+      kp_rad: 0.05
+      ksize: 0.5
+      max_input: 20.0
+      min_input: 0.0
+      name: Default
+      parameters: !!python/object/new:dynamic_reconfigure.encoding.Config
+        state: []
+      parent: 0
+      shift_freeze: 0.3
+      shift_rad: 0.1
+      state: true
+      type: ''
+    state: []
+  ki_ratio: 5.0
+  kp_rad: 0.05
+  ksize: 0.5
+  max_input: 20.0
+  min_input: 0.0
+  shift_freeze: 0.3
+  shift_rad: 0.1
+state: []

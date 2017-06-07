@@ -60,4 +60,8 @@
   
   <node name="reconf" pkg="rqt_reconfigure" type="rqt_reconfigure"/>
 
+  <node name="vision_param" pkg="dynamic_reconfigure" type="dynparam" args="load /animat/vision/vision $(find animat)/params/vision-demo-vision.yaml"/>
+  <node name="locus_param" pkg="dynamic_reconfigure" type="dynparam" args="load /focus/locus $(find animat)/params/vision-demo-locus.yaml"/>
+  <node name="lgn2v1_param" pkg="dynamic_reconfigure" type="dynparam" args="load /lgn2v1/converter $(find animat)/params/vision-demo-lgn2v1.yaml"/>
+
 </launch>

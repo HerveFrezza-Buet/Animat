@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <launch>  
 
   <group ns="lgn2v1">
@@ -67,5 +68,9 @@
     <param name="image_transport" value="compressed"/>
     <remap from="image" to="/animat/vision/gaze"/>
   </node>
+
+  <node name="vision_param" pkg="dynamic_reconfigure" type="dynparam" args="load /animat/vision/vision $(find animat)/params/interface-demo-vision.yaml"/>
+  <node name="locus_param" pkg="dynamic_reconfigure" type="dynparam" args="load /focus/locus $(find animat)/params/interface-demo-locus.yaml"/>
+  <node name="lgn2v1_param" pkg="dynamic_reconfigure" type="dynparam" args="load /lgn2v1/converter $(find animat)/params/interface-demo-lgn2v1.yaml"/>
 
 </launch>
