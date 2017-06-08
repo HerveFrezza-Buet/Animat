@@ -6,20 +6,31 @@ import rospy
 from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 
+import dynamic_reconfigure.server
+from animat.cfg import EmbodimentParamConfig
+
+
 class Embodiment:
     
     def __init__(self):
-        self.cmd_sub   = rospy.Subscriber("command", String,  self.on_command, queue_size = 1)
-        self.cmd_sub   = rospy.Subscriber("area",    String,  self.on_area,    queue_size = 1)
-        self.cmd_pub   = rospy.Publisher ("physio",  String,                   queue_size = 1)
-        self.twist_pub = rospy.Publisher ('cmd_vel', Twist,                    queue_size = 1)
         
         self.linear  = .1
         self.angular = .2
         self.twist   = Twist()
         self.time    = rospy.Time.now()
-        self.area    = None 
+        self.area    = None
+        
+        self.config_srv = dynamic_reconfigure.server.Server(EmbodimentParamConfig, self.on_reconf)
+        self.cmd_sub   = rospy.Subscriber("command", String,  self.on_command, queue_size = 1)
+        self.cmd_sub   = rospy.Subscriber("area",    String,  self.on_area,    queue_size = 1)
+        self.cmd_pub   = rospy.Publisher ("physio",  String,                   queue_size = 1)
+        self.twist_pub = rospy.Publisher ('cmd_vel', Twist,                    queue_size = 1)
 
+    def on_reconf(self, config, level):
+        self.linear         = config['linear_speed']  
+        self.angular        = config['angular_speed']
+        return config
+        
     def on_command(self, command):
         if command.data == "go" :
             self.twist.angular.z = 0
