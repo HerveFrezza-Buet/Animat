@@ -34,15 +34,15 @@ class Vision:
         self.wait_stable_focus = .5
         self.focus_area        = "focus_unstable"
         self.config_srv = dynamic_reconfigure.server.Server(VisionParamConfig, self.on_reconf)
-        self.raw_sub           = rospy.Subscriber("raw/compressed", CompressedImage, self.on_raw,     queue_size = 1)
-        self.in_sub            = rospy.Subscriber("in/compressed",  CompressedImage, self.on_image,   queue_size = 1)
+        self.raw_sub           = rospy.Subscriber("raw/compressed",  CompressedImage, self.on_raw,     queue_size = 1)
+        self.in_sub            = rospy.Subscriber("in/compressed",   CompressedImage, self.on_image,   queue_size = 1)
         self.gaze_pub          = rospy.Publisher ("gaze/compressed", CompressedImage,                  queue_size = 1)
-        self.focus_sub         = rospy.Subscriber("focus",          Point,           self.on_focus,   queue_size = 1)
-        self.cmd_sub           = rospy.Subscriber("command",        String,          self.on_command, queue_size = 1)
-        self.set_focus_pub        = rospy.Publisher ("set_focus",         Point,                            queue_size = 1)
-        self.fovea_pub         = rospy.Publisher ("fovea",          Float32,                          queue_size = 1)
-        self.area_pub          = rospy.Publisher ("focus_area",     String,                           queue_size = 1)
-        self.hsv_pub           = rospy.Publisher ("hsv",            HSVParams,                        queue_size = 1)
+        self.focus_sub         = rospy.Subscriber("focus",           Point,           self.on_focus,   queue_size = 1)
+        self.cmd_sub           = rospy.Subscriber("command",         String,          self.on_command, queue_size = 1)
+        self.set_focus_pub     = rospy.Publisher ("set_focus",       Point,                            queue_size = 1)
+        self.fovea_pub         = rospy.Publisher ("fovea",           Float32,                          queue_size = 1)
+        self.area_pub          = rospy.Publisher ("focus_area",      String,                           queue_size = 1)
+        self.hsv_pub           = rospy.Publisher ("hsv",             HSVParams,                        queue_size = 1)
     
     def on_reconf(self, config, level):
         self.near_limit         = config['near_limit']  

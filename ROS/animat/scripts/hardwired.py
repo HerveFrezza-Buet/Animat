@@ -20,6 +20,7 @@ class Hardwired:
         self.nav_state       = 'reach'
         self.twist           = Twist()
         self.fovea_min       = .05
+        self.ingest_tilt     = -30
         self.last_fovea      = rospy.Time.now()
         self.last_search     = rospy.Time.now()
         self.hydration_sub   = rospy.Subscriber('hydration',  Float32, self.on_hydration,  queue_size = 1)
@@ -28,6 +29,8 @@ class Hardwired:
         self.focus_sub       = rospy.Subscriber('focus',      Point,   self.on_focus,      queue_size = 1)
         self.twist_pub       = rospy.Publisher ('cmd_vel',    Twist,                       queue_size = 1)
         self.pantilt_pub     = rospy.Publisher ('pantilt',    Point,                       queue_size = 1)
+        self.ingest_pub      = rospy.Publisher ('ingest',     String,                      queue_size = 1)
+        self.attention_pub   = rospy.Publisher ('attention',  String,                      queue_size = 1)
         
 
     def move(self):
@@ -50,6 +53,15 @@ class Hardwired:
         self.glycemia = msg.data
 
     def idle(self):
+
+        if self.focus.y < self.ingest_tilt :
+            self.ingest_pub.publish('ingest')
+
+        if self.glycemia <= self.hydration :
+            self.attention_pub.publish('red')
+        else:
+            self.attention_pub.publish('blue')
+            
         if self.nav_state is None:
             pass
         

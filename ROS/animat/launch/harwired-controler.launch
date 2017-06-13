@@ -1,20 +1,20 @@
 <launch>  
 
   <group ns="lgn2v1">
-    <node name="converter" pkg="lgn2v1" type="lgn2v1-node">
+    <node respawn="true" name="converter" pkg="lgn2v1" type="lgn2v1-node">
       <remap from="in" to="/smallbot/front" />
       <remap from="dfocus" to="/smallbot/dpantilt" />
     </node>
   </group>
   
   <group ns="color_filter">
-    <node name="filter" pkg="color_filter" type="color-filter-hsv-node">
+    <node respawn="true" name="filter" pkg="color_filter" type="color-filter-hsv-node">
       <remap from="in" to="/lgn2v1/lgn" />
     </node>
   </group>
 
   <group ns="focus">
-    <node name="locus" pkg="focus" type="locus.py">
+    <node respawn="true" name="locus" pkg="focus" type="locus.py">
       <remap from="in/compressed" to="/color_filter/filtered/compressed"/>
       <remap from="shift" to="/lgn2v1/convert"/>
     </node>
@@ -23,7 +23,7 @@
   
   <group ns="animat">
     <group ns="vision">
-      <node name="vision" pkg="animat" type="vision.py">
+      <node respawn="true" name="vision" pkg="animat" type="vision.py">
 	<remap from="raw/compressed" to="/smallbot/front/compressed"/>
 	<remap from="in/compressed" to="/color_filter/filtered/compressed"/>
 	<remap from="focus" to="/smallbot/camerapos"/>
@@ -33,12 +33,12 @@
     </group>
     
     <group ns="physiology">
-      <node name="physiology" pkg="animat" type="physiology.py">
+      <node respawn="true" name="physiology" pkg="animat" type="physiology.py">
       </node>
     </group>
     
     <group ns="embodiment">
-      <node name="embodiment" pkg="animat" type="embodiment.py">
+      <node respawn="true" name="embodiment" pkg="animat" type="embodiment.py">
 	<remap from="cmd_vel" to="/smallbot/cmd_vel"/>
 	<remap from="area" to="/world/area"/>
 	<remap from="physio" to="/animat/physiology/command"/>
@@ -54,13 +54,15 @@
     </node>
   </group>
 
-  <node name="hardwired" pkg="animat" type="hardwired.py">
-    <remap from="hydration" to="/animat/physiology/hydration"/>
-    <remap from="glycemia" to="/animat/physiology/glycemia"/>
-    <remap from="fovea" to="/animat/vision/fovea"/>
-    <remap from="focus" to="/smallbot/camerapos"/>
-    <remap from="cmd_vel" to="/smallbot/cmd_vel"/>
-    <remap from="pantilt" to="/smallbot/pantilt"/>
+  <node respawn="true" name="hardwired" pkg="animat" type="hardwired.py">
+    <remap from="hydration"   to="/animat/physiology/hydration"/>
+    <remap from="glycemia"    to="/animat/physiology/glycemia"/>
+    <remap from="fovea"       to="/animat/vision/fovea"/>
+    <remap from="attention"   to="/animat/vision/command"/>
+    <remap from="ingest"      to="/animat/embodiment/command"/>
+    <remap from="focus"       to="/smallbot/camerapos"/>
+    <remap from="cmd_vel"     to="/smallbot/cmd_vel"/>
+    <remap from="pantilt"     to="/smallbot/pantilt"/>
   </node>
   
   <node name="gaze_view" pkg="image_view" type="image_view">
@@ -72,5 +74,6 @@
   <node name="embodiment_param" pkg="dynamic_reconfigure" type="dynparam" args="load /animat/embodiment/embodiment $(find animat)/params/hardwired-controler-embodiment.yaml"/>
   <node name="locus_param"      pkg="dynamic_reconfigure" type="dynparam" args="load /focus/locus $(find animat)/params/hardwired-controler-locus.yaml"/>
   <node name="lgn2v1_param"     pkg="dynamic_reconfigure" type="dynparam" args="load /lgn2v1/converter $(find animat)/params/hardwired-controler-lgn2v1.yaml"/>
+  <node name="physiology_param"     pkg="dynamic_reconfigure" type="dynparam" args="load /animat/physiology/physiology $(find animat)/params/hardwired-controler-physiology.yaml"/>
 
 </launch>

@@ -73,5 +73,6 @@
   <node name="embodiment_param" pkg="dynamic_reconfigure" type="dynparam" args="load /animat/embodiment/embodiment $(find animat)/params/interface-demo-embodiment.yaml"/>
   <node name="locus_param" pkg="dynamic_reconfigure" type="dynparam" args="load /focus/locus $(find animat)/params/interface-demo-locus.yaml"/>
   <node name="lgn2v1_param" pkg="dynamic_reconfigure" type="dynparam" args="load /lgn2v1/converter $(find animat)/params/interface-demo-lgn2v1.yaml"/>
+  <node name="physiology_param"     pkg="dynamic_reconfigure" type="dynparam" args="load /animat/physiology/physiology $(find animat)/params/interface-demo-physiology.yaml"/>
 
 </launch>
