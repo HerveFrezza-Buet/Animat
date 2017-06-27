@@ -74,6 +74,7 @@ class Vision:
         if self.focus is not None :
             speed = math.sqrt((focus.x - self.focus.x)**2 + (focus.y - self.focus.y)**2) / (current - self.focus_time).to_sec()
             if speed > self.focus_max_speed :
+                rospy.loginfo("high speed = %f",speed)
                 self.last_fast_focus   = rospy.Time.now()
                 self.stable_focus = False
             else :

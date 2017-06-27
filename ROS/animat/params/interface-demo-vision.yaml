@@ -1,14 +1,14 @@
 !!python/object/new:dynamic_reconfigure.encoding.Config
 dictitems:
-  center_limit: 10
+  center_limit: 10.0
   center_origin: 0.0
-  focus_max_speed: 3.0
+  focus_max_speed: 20.0
   fovea_radius: 0.05
   groups: !!python/object/new:dynamic_reconfigure.encoding.Config
     dictitems:
       center_limit: 10.0
       center_origin: 0.0
-      focus_max_speed: 3.0
+      focus_max_speed: 20.0
       fovea_radius: 0.05
       groups: !!python/object/new:dynamic_reconfigure.encoding.Config
         state: []
@@ -28,6 +28,6 @@ dictitems:
   keep_focus_centered: true
   left_below: false
   near_below: true
-  near_limit: -10
+  near_limit: -10.0
   wait_stable: 0.5
 state: []
