@@ -11,8 +11,11 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 generate_dynamic_reconfigure_options(
-  cfg/triangle_contro.cfg
+  cfg/vision.cfg
+  cfg/embodiment.cfg
+  cfg/physiology.cfg
 )
+
 
 
 catkin_package(
@@ -27,6 +30,6 @@ catkin_package(
 
 catkin_install_python(
   PROGRAMS 
-  scripts/triangle_control.py
+  scripts/vision.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
